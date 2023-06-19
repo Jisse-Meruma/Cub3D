@@ -1,7 +1,6 @@
 
 #ifndef SOOMANYSTRUCTS_H
 # define SOOMANYSTRUCTS_H
-# include <cub3d.h>
 
 typedef enum e_tile
 {

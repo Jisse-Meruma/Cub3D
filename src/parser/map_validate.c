@@ -1,4 +1,4 @@
-#include "cub3d.h"
+#include <cub3d.h>
 # define EXTENSION_LENGTH 4
 
 bool	map_extension_check(char *map_path)

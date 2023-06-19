@@ -94,4 +94,10 @@ depclean:
 	@$(MAKE) -C libft fclean
 	@$(RM) $(MLX)/build
 
-.PHONY: clean all fclean re libmlx depclean rere
+cc:
+	@make -n | compiledb
+
+clean_cc:
+	@$(RM) compile_commands.json
+
+.PHONY: clean all fclean re libmlx depclean rere cc clean_cc

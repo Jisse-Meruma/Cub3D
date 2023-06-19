@@ -2,3 +2,4 @@ obj
 obj/*
 cub3d
 .cache
+compile_commands.json

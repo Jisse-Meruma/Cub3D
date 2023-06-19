@@ -58,7 +58,7 @@ all: $(NAME)
 $(NAME): $(OBJ) $(LIBS)
 	@echo $(Yellow) Building.. 🏠$(Color_Off)
 	@echo -----------------------
-	@$(CC) $^ $(LIBS) $(MLXLIB) $(DEBUGGING) -o $(NAME) 
+	@$(CC) $^ $(LIBS) $(MLXLIB) -o $(NAME) 
 	@echo $(Green) Complete ✅ $(Color_Off)
 	@echo -----------------------
 
@@ -100,4 +100,7 @@ cc:
 clean_cc:
 	@$(RM) compile_commands.json
 
-.PHONY: clean all fclean re libmlx depclean rere cc clean_cc
+debug:
+	@make DEBUG=1
+
+.PHONY: clean all fclean re libmlx depclean rere cc clean_cc debug

@@ -28,8 +28,10 @@ bool	read_map(int file, t_map *map)
 	str_map = ft_2d_add(NULL, line);
 	if (!str_map)
 		return (false);
+	printf("readpoint1\n");
 	while (line)
 	{
+		printf("readpoint2");
 		free(line);
 		line = get_next_line(file);
 		if (!line)
@@ -42,4 +44,9 @@ bool	read_map(int file, t_map *map)
 	}
 	map->str_map = str_map;
 	return (true);
+}
+
+bool	setup_map(t_map *map)
+{
+	return (0);
 }

@@ -10,7 +10,8 @@
 bool	parser(char *map_config, t_map *map);
 bool	map_extension_check(char *map_path);
 bool	open_map(char *map_path, int *fd);
-
+bool	read_map(int file, t_map *map);
+bool	setup_map(t_map *map);
 
 
 

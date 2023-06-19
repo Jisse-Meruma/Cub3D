@@ -6,9 +6,9 @@ DEBUGGING	?=
 LIBS		:=	./libft/libft.a
 MLX			?=	./MLX42
 MLXLIB		:= $(MLX)/build/libmlx42.a
-HEADER		:=	-Ilibft -Iincludes -I$(MLX)/include/MLX42
+HEADER		:=	-Ilibft -Iinclude -I$(MLX)/include/MLX42
 
-HEADERS		:=	libft/libft.h includes/cub3d.h includes/struct.h $(MLX)/include/MLX42/MLX42.h
+HEADERS		:=	libft/libft.h include/cub3d.h include/struct.h $(MLX)/include/MLX42/MLX42.h
 OBJ_DIR		:=	obj
 SRC_DIR 	:=	src
 

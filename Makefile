@@ -9,8 +9,8 @@ MLXLIB		:= $(MLX)/build/libmlx42.a
 HEADER		:=	-I libft -I includes -I $(MLX)/include
 
 HEADERS		:=	libft/libft.h includes/cub3d.h includes/struct.h $(MLX)/include/MLX42/MLX42.h
-OBJ_DIR		:=	./obj
-SRC_DIR 	:=	./src
+OBJ_DIR		:=	obj
+SRC_DIR 	:=	src
 
 ### UTILS #####################################################
 CFLAGS	:=	-Wall -Wextra 
@@ -18,8 +18,9 @@ RM		:=	rm -rf
 
 SRC 	:=	main.c
 
-OBJ		:=	$(addprefix $(OBJ_DIR)/,$(SRC:.c=.o))
+OBJ		:=	$(patsubst %.c, $(OBJ_DIR)/%.o, $(SRC))
 SRC		:=	$(addprefix $(SRC_DIR)/,$(SRC))
+
 ## BON_SRC :=
 
 ## BON_OBJ :=  $(BON_SRC:_bonus.c=_bonus.o)
@@ -52,7 +53,7 @@ endif
 
 all: $(NAME)
 
-$(NAME): $(OBJ)
+$(NAME): $(OBJ_DIR) $(OBJ)
 	@echo $(Yellow) Building.. 🏠$(Color_Off)
 	@echo -----------------------
 	@$(MAKE) -C libft bonus
@@ -60,14 +61,13 @@ $(NAME): $(OBJ)
 	@echo $(Green) Complete ✅ $(Color_Off)
 	@echo -----------------------
 
-$(OBJ_DIR)/%.o: $(SRC_DIR)/%.c $(HEADERS) | $(OBJ_DIR)
-	@mkdir -p $(@D)
+$(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
 	@echo $(Purple) Compiling.. 🧱 $< $(Color_Off)
 	@echo -----------------------
 	@$(CC) $(CFLAGS) $(HEADER) -c $< -o $@
 
 $(OBJ_DIR):
-	@mkdir $@
+	@mkdir -p $@
 
 clean:
 	@echo $(Cyan) Sweeping.. 💥 $(Color_Off)

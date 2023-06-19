@@ -6,7 +6,7 @@ DEBUGGING	?=
 LIBS		:=	./libft/libft.a
 MLX			?=	./MLX42
 MLXLIB		:= $(MLX)/build/libmlx42.a
-HEADER		:=	-I libft -I includes -I $(MLX)/include
+HEADER		:=	-Ilibft -Iincludes -I$(MLX)/include/MLX42
 
 HEADERS		:=	libft/libft.h includes/cub3d.h includes/struct.h $(MLX)/include/MLX42/MLX42.h
 OBJ_DIR		:=	obj
@@ -16,7 +16,9 @@ SRC_DIR 	:=	src
 CFLAGS	:=	-Wall -Wextra 
 RM		:=	rm -rf
 
-SRC 	:=	main.c
+SRC 	:=	main.c \
+			parser/parser.c \
+			parser/map_validate.c
 
 OBJ		:=	$(patsubst %.c, $(OBJ_DIR)/%.o, $(SRC))
 SRC		:=	$(addprefix $(SRC_DIR)/,$(SRC))
@@ -53,21 +55,25 @@ endif
 
 all: $(NAME)
 
-$(NAME): $(OBJ_DIR) $(OBJ)
+$(NAME): $(OBJ) $(LIBS)
 	@echo $(Yellow) Building.. 🏠$(Color_Off)
 	@echo -----------------------
-	@$(MAKE) -C libft bonus
 	@$(CC) $^ $(LIBS) $(MLXLIB) $(DEBUGGING) -o $(NAME) 
 	@echo $(Green) Complete ✅ $(Color_Off)
 	@echo -----------------------
 
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
+	@mkdir -p $(@D)
 	@echo $(Purple) Compiling.. 🧱 $< $(Color_Off)
 	@echo -----------------------
 	@$(CC) $(CFLAGS) $(HEADER) -c $< -o $@
 
-$(OBJ_DIR):
-	@mkdir -p $@
+$(LIBS):
+	@$(MAKE) -C libft bonus
+
+mlx:
+	@cmake MLX42 -B MLX42/build
+	@make -C MLX42/build
 
 clean:
 	@echo $(Cyan) Sweeping.. 💥 $(Color_Off)
@@ -78,9 +84,14 @@ clean:
 fclean:
 	@echo $(Red) Thorough sweeping.. 💥 $(Color_Off)
 	@echo -----------------------
-	@$(MAKE) -C libft fclean
-	@$(RM) $(NAME) $(OBJ) $(BON_OBJ)
+	@$(RM) $(NAME) $(OBJ_DIR) $(BON_OBJ)
 
 re: fclean all
 
-.PHONY: clean all fclean re libmlx
+rere: depclean fclean mlx all
+	
+depclean:
+	@$(MAKE) -C libft fclean
+	@$(RM) $(MLX)/build
+
+.PHONY: clean all fclean re libmlx depclean rere

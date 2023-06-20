@@ -42,9 +42,8 @@ int	determine_map_height(t_map *map)
 	int	height;
 
 	i = map_start_index(map->str_map);
-	printf("start index: %i\n", i);
 	height = 0;
-	while (map->str_map[i] && map->str_map[i][0] != '\n')
+	while (map->str_map[i] && valid_map_str(map->str_map[i]))
 	{
 		i++;
 		height++;

@@ -18,7 +18,8 @@ RM		:=	rm -rf
 
 SRC 	:=	main.c \
 			parser/parser.c \
-			parser/map_validate.c
+			parser/map_validate.c \
+			parser/parse_textures.c	\
 
 OBJ		:=	$(patsubst %.c, $(OBJ_DIR)/%.o, $(SRC))
 SRC		:=	$(addprefix $(SRC_DIR)/,$(SRC))

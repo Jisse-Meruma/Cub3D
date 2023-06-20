@@ -42,16 +42,4 @@ typedef struct s_map
 
 typedef void (*t_func) (t_textures *, char *);
 
-typedef struct s_map
-{
-	char		**str_map;
-	t_tile		**map;
-	int			height;
-	int			width;
-	t_textures 	textures;
-
-}	t_map;
-
-typedef void (*t_func) (t_textures *, char *);
-
 #endif

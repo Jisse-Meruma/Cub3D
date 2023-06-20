@@ -13,22 +13,24 @@ typedef enum e_tile
 	PWEST,
 } t_tile;
 
-typedef enum e_directions
+typedef enum e_element
 {
 	NORTH,
 	SOUTH,
 	WEST,
 	EAST,
-	NO_DIRECTION,
-}	t_directions;
+	FLOOR_COL,
+	CEILING_COL,
+	NO_VALUE,
+}	t_element;
 
-typedef struct s_textures
+typedef struct s_elements
 {
 	char	*north_texture_path;
 	char	*south_texture_path;
 	char	*west_texture_path;
 	char	*east_texture_path;
-}	t_textures;
+}	t_elements;
 
 typedef struct s_map
 {
@@ -36,10 +38,10 @@ typedef struct s_map
 	t_tile		**map;
 	int			height;
 	int			width;
-	t_textures 	textures;
+	t_elements 	elements;
 
 }	t_map;
 
-typedef void (*t_func) (t_textures *, char *);
+typedef void (*t_func) (t_elements *, char *);
 
 #endif

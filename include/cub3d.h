@@ -13,11 +13,14 @@ bool	open_map(char *map_path, int *fd);
 bool	read_map(int file, t_map *map);
 bool	setup_map(t_map *map);
 
-// Parser-Texture_Utils
-void north_parse(t_textures *texture, char *path);
-void south_parse(t_textures *texture, char *path);
-void east_parse(t_textures *texture, char *path);
-void west_parse(t_textures *texture, char *path);
+void	parse_elements(t_elements *elements, char **str_map);
 
+// Parser-Texture_Utils
+void north_parse(t_elements *texture, char *path);
+void south_parse(t_elements *texture, char *path);
+void east_parse(t_elements *texture, char *path);
+void west_parse(t_elements *texture, char *path);
+void ceiling_parse(t_elements *element, char *path);
+void floor_parse(t_elements *element, char *path);
 
 #endif

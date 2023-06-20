@@ -24,6 +24,8 @@ SRC 	:=	main.c \
 OBJ		:=	$(patsubst %.c, $(OBJ_DIR)/%.o, $(SRC))
 SRC		:=	$(addprefix $(SRC_DIR)/,$(SRC))
 
+UNAME_S := $(shell uname -s)
+
 ## BON_SRC :=
 
 ## BON_OBJ :=  $(BON_SRC:_bonus.c=_bonus.o)
@@ -46,11 +48,9 @@ ifdef DEBUG
 	DEBUGGING += DEBUG=1
 endif
 
-ifdef LINUX
+ifeq ($(UNAME_S), Linux)
 	MLXLIB += -lglfw -ldl -pthread -lm
-endif
-
-ifndef LINUX 
+else
 	MLXLIB += -lglfw3 -framework Cocoa -framework OpenGL -framework IOKit 
 endif
 

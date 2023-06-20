@@ -49,7 +49,6 @@ typedef struct s_cubed
 	mlx_t		*mlx;
 }	t_cubed;
 
-typedef void (*t_func) (t_textures *, char *);
 typedef void (*t_func) (t_elements *, char *);
 
 #endif

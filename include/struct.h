@@ -13,14 +13,6 @@ typedef enum e_tile
 	PWEST,
 } t_tile;
 
-typedef struct s_map
-{
-	char		**str_map;
-	t_tile		**map;
-	t_textures 	textures;
-
-}	t_map;
-
 typedef struct s_textures
 {
 	char	*north_texture_path;
@@ -29,5 +21,14 @@ typedef struct s_textures
 	char	*east_texture_path;
 }	t_textures;
 
+typedef struct s_map
+{
+	char		**str_map;
+	t_tile		**map;
+	int			height;
+	int			width;
+	t_textures 	textures;
 
-#endif 
+}	t_map;
+
+#endif

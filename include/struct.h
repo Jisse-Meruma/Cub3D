@@ -11,7 +11,7 @@ typedef enum e_tile
 	PEAST,
 	PSOUTH,
 	PWEST,
-} t_tile;
+}	t_tile;
 
 typedef enum e_directions
 {
@@ -39,6 +39,13 @@ typedef struct s_map
 	t_textures 	textures;
 
 }	t_map;
+
+typedef struct s_cubed
+{
+	// t_player	*player;
+	t_map		*map;
+	mlx_t		*mlx;
+}	t_cubed;
 
 typedef void (*t_func) (t_textures *, char *);
 

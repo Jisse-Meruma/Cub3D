@@ -46,7 +46,7 @@ White		=	"\033[0;37m"		# White
 ### EXEC #######################################################
 
 ifdef DEBUG
-	MLXLIB += -fsanitize=address -g
+	CFLAGS += -fsanitize=address -g
 	DEBUGGING += DEBUG=1
 endif
 
@@ -61,7 +61,7 @@ all: $(NAME)
 $(NAME): $(OBJ) $(LIBS)
 	@echo $(Yellow) Building.. 🏠$(Color_Off)
 	@echo -----------------------
-	@$(CC) $^ $(LIBS) $(MLXLIB) -o $(NAME)
+	@$(CC) $^ $(LIBS) $(MLXLIB) $(CFLAGS) -o $(NAME)
 	@echo $(Green) Complete ✅ $(Color_Off)
 	@echo -----------------------
 

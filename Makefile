@@ -13,7 +13,7 @@ OBJ_DIR		:=	obj
 SRC_DIR 	:=	src
 
 ### UTILS #####################################################
-CFLAGS	:=	-Wall -Wextra 
+CFLAGS	:=	-Wall -Wextra
 RM		:=	rm -rf
 
 SRC 	:=	main.c \
@@ -21,6 +21,7 @@ SRC 	:=	main.c \
 			parser/map_validate.c \
 			parser/parse_textures.c	\
 			parser/textures_utils.c	\
+			parser/setup_map.c
 
 OBJ		:=	$(patsubst %.c, $(OBJ_DIR)/%.o, $(SRC))
 SRC		:=	$(addprefix $(SRC_DIR)/,$(SRC))
@@ -52,7 +53,7 @@ endif
 ifeq ($(UNAME_S), Linux)
 	MLXLIB += -lglfw -ldl -pthread -lm
 else
-	MLXLIB += -lglfw3 -framework Cocoa -framework OpenGL -framework IOKit 
+	MLXLIB += -lglfw3 -framework Cocoa -framework OpenGL -framework IOKit
 endif
 
 all: $(NAME)
@@ -60,7 +61,7 @@ all: $(NAME)
 $(NAME): $(OBJ) $(LIBS)
 	@echo $(Yellow) Building.. 🏠$(Color_Off)
 	@echo -----------------------
-	@$(CC) $^ $(LIBS) $(MLXLIB) $(DEBUGGING) -o $(NAME) 
+	@$(CC) $^ $(LIBS) $(MLXLIB) -o $(NAME)
 	@echo $(Green) Complete ✅ $(Color_Off)
 	@echo -----------------------
 
@@ -91,7 +92,7 @@ fclean:
 re: fclean all
 
 rere: depclean fclean mlx all
-	
+
 depclean:
 	@$(MAKE) -C libft fclean
 	@$(RM) $(MLX)/build
@@ -102,4 +103,7 @@ cc:
 clean_cc:
 	@$(RM) compile_commands.json
 
-.PHONY: clean all fclean re libmlx depclean rere cc clean_cc
+debug:
+	@make DEBUG=1
+
+.PHONY: clean all fclean re libmlx depclean rere cc clean_cc debug

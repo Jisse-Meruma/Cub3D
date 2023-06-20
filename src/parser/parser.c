@@ -26,7 +26,6 @@ bool	parser(char *map_config, t_map *map)
 		printf("SOMETHING WENT WRONG WITH THE OPENING AAAAAA\n");
 		return (false);
 	}
-	printf("hoi\n");
 	if (!read_map(file, map))
 	{
 		printf("SOMETHING WENT WRONG WITH READING AAAAAA\n");
@@ -34,6 +33,9 @@ bool	parser(char *map_config, t_map *map)
 	}
 	print_map_str(map);
 	if (!setup_map(map))
-	{}
+	{
+		printf("SOMETHING WENT WRONG WITH MAP SETUP AAAAAA\n");
+		return (false);
+	}
 	return (true);
 }

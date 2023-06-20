@@ -15,7 +15,7 @@ t_directions	string_to_direction(char *str)
 
 t_func	select_direction(t_directions direction)
 {
-	const t_func functions[5] = {	
+	const t_func functions[5] = {
 	[NORTH] = north_parse,
 	[SOUTH] = south_parse,
 	[WEST] = west_parse,

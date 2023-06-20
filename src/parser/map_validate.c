@@ -43,8 +43,3 @@ bool	read_map(int file, t_map *map)
 	map->str_map = str_map;
 	return (true);
 }
-
-bool	setup_map(t_map *map)
-{
-	return (0);
-}

@@ -4,9 +4,11 @@ void	print_map_str(t_map *map)
 {
 	int i;
 
+	i = 0;
 	while (map->str_map[i])
 	{
-		printf(map->str_map[i]);
+		printf("%s", map->str_map[i]);
+		i++;
 	}
 }
 
@@ -30,7 +32,7 @@ bool	parser(char *map_config, t_map *map)
 		printf("SOMETHING WENT WRONG WITH READING AAAAAA\n");
 		return (false);
 	}
-	// print_map_str(map);
+	print_map_str(map);
 	if (!setup_map(map))
 	{}
 	return (true);

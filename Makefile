@@ -19,8 +19,9 @@ RM		:=	rm -rf
 SRC 	:=	main.c \
 			parser/parser.c \
 			parser/map_validate.c \
-			parser/parse_textures.c	\
-			parser/textures_utils.c	\
+			parser/parse_elements.c	\
+			parser/elements_utils.c	\
+			parser/elements_utils2.c\
 			parser/setup_map.c
 
 OBJ		:=	$(patsubst %.c, $(OBJ_DIR)/%.o, $(SRC))

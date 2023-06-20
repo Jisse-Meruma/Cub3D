@@ -32,6 +32,7 @@ bool	parser(char *map_config, t_map *map)
 		return (false);
 	}
 	print_map_str(map);
+	parse_elements(&(map->elements), map->str_map);
 	if (!setup_map(map))
 	{
 		printf("SOMETHING WENT WRONG WITH MAP SETUP AAAAAA\n");

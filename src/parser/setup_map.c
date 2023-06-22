@@ -36,22 +36,25 @@ static int	map_start_index(char **map)
 	return (i);
 }
 
-int	determine_map_height(t_map *map)
+bool	determine_map_height(t_map *map)
 {
 	int	i;
 	int	height;
 
 	i = map_start_index(map->str_map);
 	height = 0;
-	while (map->str_map[i] && valid_map_str(map->str_map[i]))
+	while (map->str_map[i] && map->str_map[i][0] != '\n')
 	{
+		if (!valid_map_str(map->str_map[i]))
+			return (false);
 		i++;
 		height++;
 	}
-	return (height);
+	map->height = height;
+	return (true);
 }
 
-int	determine_map_width(t_map *map)
+bool	determine_map_width(t_map *map)
 {
 	int	i;
 	int	width;
@@ -66,7 +69,8 @@ int	determine_map_width(t_map *map)
 			max_width = width;
 		i++;
 	}
-	return (max_width);
+	map->width = max_width;
+	return (true);
 }
 
 bool	allocate_map_tiles(t_map *map)
@@ -133,8 +137,10 @@ bool	set_map_tiles(t_map *map)
 
 bool	setup_map(t_map *map)
 {
-	map->height = determine_map_height(map);
-	map->width = determine_map_width(map);
+	if (!determine_map_height(map))
+		return (false);
+	if (!determine_map_width(map))
+		return (false);
 	if (!allocate_map_tiles(map))
 		return (false);
 	if (!set_map_tiles(map))

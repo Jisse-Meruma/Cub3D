@@ -42,9 +42,21 @@ typedef struct s_map
 
 }	t_map;
 
+typedef struct s_vect
+{
+	float	x;
+	float	y;
+} t_vec;
+typedef struct s_player
+{
+	t_vec	dir;
+	t_vec	pos;
+	t_vec	c_plane;
+}	t_player;
+
 typedef struct s_cubed
 {
-	// t_player	*player;
+	t_player	*player;
 	t_map		*map;
 	mlx_t		*mlx;
 }	t_cubed;

@@ -26,10 +26,12 @@ typedef enum e_element
 
 typedef struct s_elements
 {
-	char	*north_texture_path;
-	char	*south_texture_path;
-	char	*west_texture_path;
-	char	*east_texture_path;
+	char		*north_texture_path;
+	char		*south_texture_path;
+	char		*west_texture_path;
+	char		*east_texture_path;
+	uint32_t	col_floor;
+	uint32_t	col_ceiling;
 }	t_elements;
 
 typedef struct s_map

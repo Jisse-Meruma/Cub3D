@@ -22,7 +22,9 @@ SRC 	:=	main.c \
 			parser/parse_elements.c	\
 			parser/elements_utils.c	\
 			parser/elements_utils2.c\
-			parser/setup_map.c
+			parser/setup_map.c \
+			cub_init.c \
+			cub_loop.c
 
 OBJ		:=	$(patsubst %.c, $(OBJ_DIR)/%.o, $(SRC))
 SRC		:=	$(addprefix $(SRC_DIR)/,$(SRC))

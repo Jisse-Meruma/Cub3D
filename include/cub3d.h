@@ -7,6 +7,9 @@
 # include <fcntl.h>
 # include <stdio.h>
 
+# define WINDOW_WIDTH 1920
+# define WINDOW_HEIGHT 1080
+
 bool	parser(char *map_config, t_map *map);
 bool	map_extension_check(char *map_path);
 bool	open_map(char *map_path, int *fd);
@@ -22,5 +25,8 @@ void east_parse(t_elements *texture, char *path);
 void west_parse(t_elements *texture, char *path);
 void ceiling_parse(t_elements *element, char *path);
 void floor_parse(t_elements *element, char *path);
+
+// Cub3d initilization
+bool	cub_init(t_cubed *cub);
 
 #endif

@@ -2,6 +2,8 @@
 #ifndef SOOMANYSTRUCTS_H
 # define SOOMANYSTRUCTS_H
 
+# include <MLX42.h>
+
 typedef enum e_tile
 {
 	SPACE,
@@ -49,6 +51,7 @@ typedef struct s_vect
 	float	x;
 	float	y;
 } t_vec;
+
 typedef struct s_player
 {
 	t_vec	dir;
@@ -58,9 +61,10 @@ typedef struct s_player
 
 typedef struct s_cubed
 {
-	t_player	*player;
-	t_map		*map;
+	t_player	player;
+	t_map		map;
 	mlx_t		*mlx;
+	mlx_image_t	*img;
 }	t_cubed;
 
 typedef void (*t_func) (t_elements *, char *);

@@ -13,6 +13,7 @@ typedef enum e_tile
 	PEAST,
 	PSOUTH,
 	PWEST,
+	TEMP,
 }	t_tile;
 
 typedef enum e_element
@@ -36,21 +37,23 @@ typedef struct s_elements
 	uint32_t	col_ceiling;
 }	t_elements;
 
-typedef struct s_map
-{
-	char		**str_map;
-	t_tile		**map;
-	int			height;
-	int			width;
-	t_elements 	elements;
-
-}	t_map;
-
 typedef struct s_vect
 {
 	float	x;
 	float	y;
 } t_vec;
+
+typedef struct s_map
+{
+	char		**str_map;
+	t_tile		**map;
+	int			px;
+	int			py;
+	int			height;
+	int			width;
+	t_elements 	elements;
+
+}	t_map;
 
 typedef struct s_player
 {

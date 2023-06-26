@@ -1,4 +1,6 @@
+#include "struct.h"
 #include <cub3d.h>
+#include <stdbool.h>
 # define EXTENSION_LENGTH 4
 
 bool	map_extension_check(char *map_path)
@@ -41,5 +43,37 @@ bool	read_map(int file, t_map *map)
 			return (free(line), false);
 	}
 	map->str_map = str_map;
+	return (true);
+}
+
+bool	flood_fill_validate(t_map *map, int y, int x)
+{
+	bool	ret;
+
+	ret = true;
+	// printf("x: %i, y: %i", y, x);
+	if (x == 0 || y == 0 || x == map->width - 1 || y == map->height - 1 || map->map[y][x] == SPACE)
+		return (false);
+	map->map[y][x] = TEMP;
+	if (x > 0 && map->map[y][x - 1] != WALL && map->map[y][x - 1] != TEMP)
+		ret = flood_fill_validate(map, y, x - 1);
+	if (ret && x < map->width && map->map[y][x + 1] != WALL && map->map[y][x + 1] != TEMP)
+		ret = flood_fill_validate(map, y, x + 1);
+	if (ret && y > 0 && map->map[y - 1][x] != WALL && map->map[y - 1][x] != TEMP)
+		ret = flood_fill_validate(map, y - 1, x);
+	if (ret && y < map->height && map->map[y + 1][x] != WALL && map->map[y + 1][x] != TEMP)
+		ret = flood_fill_validate(map, y + 1, x);
+	return (ret);
+}
+
+bool	validate_map(t_map *map)
+{
+	t_tile	p_tile;
+	if (map->px == -1)
+		return (false);
+	p_tile = map->map[map->py][map->px];
+	if (!flood_fill_validate(map, map->py, map->px))
+		return (false);
+	map->map[map->py][map->px] = p_tile;
 	return (true);
 }

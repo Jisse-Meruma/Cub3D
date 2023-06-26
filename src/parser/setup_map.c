@@ -1,3 +1,4 @@
+#include "struct.h"
 #include <cub3d.h>
 
 static bool	valid_map_char(char c)
@@ -108,9 +109,9 @@ t_tile	get_tile(char c)
 		return (PEAST);
 	else if (c == 'S')
 		return (PSOUTH);
-	else
+	else if (c == 'W')
 		return (PWEST);
-
+	return (SPACE);
 }
 
 bool	set_map_tiles(t_map *map)
@@ -127,6 +128,15 @@ bool	set_map_tiles(t_map *map)
 		while (map->str_map[i][j])
 		{
 			map->map[y][j] = get_tile(map->str_map[i][j]);
+			if (map->map[y][j] == PNORTH || map->map[y][j] == PEAST
+					|| map->map[y][j] == PSOUTH || map->map[y][j] == PWEST)
+			{
+				printf("player tile: %i\n", map->map[y][j]);
+				if (map->px != -1)
+					return (false);
+				map->py = y;
+				map->px = j;
+			}
 			j++;
 		}
 		y++;
@@ -137,14 +147,16 @@ bool	set_map_tiles(t_map *map)
 
 bool	setup_map(t_map *map)
 {
+	map->px = -1;
+	map->py = -1;
 	if (!determine_map_height(map))
-		return (false);
+		return (printf("Failed to determine map height\n"), false);
 	if (!determine_map_width(map))
-		return (false);
+		return (printf("Failed to determine map width\n"), false);
 	if (!allocate_map_tiles(map))
-		return (false);
+		return (printf("Map tile allocation failed\n"), false);
 	if (!set_map_tiles(map))
-		return (false);
+		return (printf("Map invalid: multiple player tiles\n"), false);
 	printf("width: %i, height: %i\n", map->width, map->height);
 	return (true);
 }

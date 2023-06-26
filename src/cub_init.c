@@ -2,6 +2,7 @@
 
 bool	player_init(t_cubed *cub)
 {
+	// get_player_orientation();
 	return (true);
 }
 

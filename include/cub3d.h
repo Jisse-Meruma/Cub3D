@@ -10,11 +10,13 @@
 # define WINDOW_WIDTH 1920
 # define WINDOW_HEIGHT 1080
 
+// Parser functions
 bool	parser(char *map_config, t_map *map);
 bool	map_extension_check(char *map_path);
 bool	open_map(char *map_path, int *fd);
 bool	read_map(int file, t_map *map);
 bool	setup_map(t_map *map);
+bool	validate_map(t_map *map);
 
 void	parse_elements(t_elements *elements, char **str_map);
 

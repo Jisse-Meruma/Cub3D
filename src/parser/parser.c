@@ -38,5 +38,10 @@ bool	parser(char *map_config, t_map *map)
 		printf("SOMETHING WENT WRONG WITH MAP SETUP AAAAAA\n");
 		return (false);
 	}
+	if (!validate_map(map))
+	{
+		printf("INVALID MAP\n");
+		return (false);
+	}
 	return (true);
 }

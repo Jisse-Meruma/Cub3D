@@ -51,7 +51,6 @@ bool	flood_fill_validate(t_map *map, int y, int x)
 	bool	ret;
 
 	ret = true;
-	// printf("x: %i, y: %i", y, x);
 	if (x == 0 || y == 0 || x == map->width - 1 || y == map->height - 1 || map->map[y][x] == SPACE)
 		return (false);
 	map->map[y][x] = TEMP;
@@ -74,6 +73,7 @@ bool	validate_map(t_map *map)
 	p_tile = map->map[map->py][map->px];
 	if (!flood_fill_validate(map, map->py, map->px))
 		return (false);
+	set_map_tiles(map);
 	map->map[map->py][map->px] = p_tile;
 	return (true);
 }

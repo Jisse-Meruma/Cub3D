@@ -131,7 +131,6 @@ bool	set_map_tiles(t_map *map)
 			if (map->map[y][j] == PNORTH || map->map[y][j] == PEAST
 					|| map->map[y][j] == PSOUTH || map->map[y][j] == PWEST)
 			{
-				printf("player tile: %i\n", map->map[y][j]);
 				if (map->px != -1)
 					return (false);
 				map->py = y;

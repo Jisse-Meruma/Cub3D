@@ -2,6 +2,11 @@
 #include "struct.h"
 #include <cub3d.h>
 
+void	draw_map(t_cubed *cub)
+{
+	
+}
+
 void	cub_frame(void *param)
 {
 	t_cubed	*cub;
@@ -11,6 +16,7 @@ void	cub_frame(void *param)
 	{
 		mlx_close_window(cub->mlx);
 	}
+	draw_map(cub);
 }
 
 bool	cub_loop(t_cubed *cub)

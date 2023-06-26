@@ -1,5 +1,6 @@
 #include "struct.h"
 #include <cub3d.h>
+#include <stdbool.h>
 
 static bool	valid_map_char(char c)
 {
@@ -114,6 +115,32 @@ t_tile	get_tile(char c)
 	return (SPACE);
 }
 
+bool	get_player_pos(t_map *map)
+{
+	int	y;
+	int	x;
+
+	y = 0;
+	while (y < map->height)
+	{
+		x = 0;
+		while (x < map->width)
+		{
+			if (map->map[y][x] == PNORTH || map->map[y][x] == PEAST
+					|| map->map[y][x] == PSOUTH || map->map[y][x] == PWEST)
+			{
+				if (map->px != -1)
+					return (false);
+				map->py = y;
+				map->px = x;
+			}
+			x++;
+		}
+		y++;
+	}
+	return (true);
+}
+
 bool	set_map_tiles(t_map *map)
 {
 	int	i;
@@ -128,14 +155,6 @@ bool	set_map_tiles(t_map *map)
 		while (map->str_map[i][j])
 		{
 			map->map[y][j] = get_tile(map->str_map[i][j]);
-			if (map->map[y][j] == PNORTH || map->map[y][j] == PEAST
-					|| map->map[y][j] == PSOUTH || map->map[y][j] == PWEST)
-			{
-				if (map->px != -1)
-					return (false);
-				map->py = y;
-				map->px = j;
-			}
 			j++;
 		}
 		y++;
@@ -155,7 +174,9 @@ bool	setup_map(t_map *map)
 	if (!allocate_map_tiles(map))
 		return (printf("Map tile allocation failed\n"), false);
 	if (!set_map_tiles(map))
-		return (printf("Map invalid: multiple player tiles\n"), false);
+		return (printf("Failed to set map tiles... idk how\n"), false);
+	if (!get_player_pos(map))
+		return (printf("ERROR mulitple player positions\n"), false);
 	printf("width: %i, height: %i\n", map->width, map->height);
 	return (true);
 }

@@ -1,8 +1,36 @@
 #include <cub3d.h>
 
+void	get_player_orientation(t_cubed *cub);
+{
+	
+	if (cub->map.map[cub->map.py][cub->map.py] == PNORTH)
+	{
+		cub->player.dir.x = 0;
+		cub->player.dir.y = 1;
+	}
+	else if (cub->map.map[cub->map.py][cub->map.py] == PEAST)
+	{
+		cub->player.dir.x = 1;
+		cub->player.dir.y = 0;
+	}
+	else if (cub->map.map[cub->map.py][cub->map.py] == PSOUTH)
+	{
+		cub->player.dir.x = 0;
+		cub->player.dir.y = -1;
+	}
+	else if (cub->map.map[cub->map.py][cub->map.py] == PWEST)
+	{
+		cub->player.dir.x = -1;
+		cub->player.dir.y = 0;
+	}
+}
+
 bool	player_init(t_cubed *cub)
 {
-	// get_player_orientation();
+	get_player_orientation(cub);
+	cub->player.pos.x = cub->map.px;
+	cub->player.pos.y = cub->map.py;
+
 	return (true);
 }
 

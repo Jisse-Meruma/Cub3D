@@ -1,6 +1,6 @@
 #include <cub3d.h>
 
-void	get_player_orientation(t_cubed *cub);
+void	get_player_orientation(t_cubed *cub)
 {
 	
 	if (cub->map.map[cub->map.py][cub->map.py] == PNORTH)
@@ -30,7 +30,7 @@ bool	player_init(t_cubed *cub)
 	get_player_orientation(cub);
 	cub->player.pos.x = cub->map.px;
 	cub->player.pos.y = cub->map.py;
-
+	cub->player.c_plane = vec_rotate(cub->player.dir, 90);
 	return (true);
 }
 

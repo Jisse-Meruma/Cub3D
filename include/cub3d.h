@@ -32,4 +32,6 @@ void floor_parse(t_elements *element, char *path);
 // Cub3d initilization
 bool	cub_init(t_cubed *cub);
 
+// Cub3d functions
+t_vec	vec_rotate(t_vec vec, float angle);
 #endif

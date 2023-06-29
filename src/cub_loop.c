@@ -53,7 +53,9 @@ void	cub_frame(void *param)
 	{
 		mlx_close_window(cub->mlx);
 	}
-	draw_map(cub);
+	 //draw_map(cub);
+	raycast(cub);
+	// printf("1\n");
 }
 
 bool	cub_loop(t_cubed *cub)

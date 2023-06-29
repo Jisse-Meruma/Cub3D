@@ -34,4 +34,5 @@ bool	cub_init(t_cubed *cub);
 
 // Cub3d functions
 t_vec	vec_rotate(t_vec vec, float angle);
+void	raycast(t_cubed *cub);
 #endif

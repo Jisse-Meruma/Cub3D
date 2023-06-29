@@ -25,7 +25,8 @@ SRC 	:=	main.c \
 			parser/setup_map.c \
 			cub_init.c \
 			cub_loop.c \
-			vec_rotate.c
+			vec_rotate.c \
+			raycast.c
 
 OBJ		:=	$(patsubst %.c, $(OBJ_DIR)/%.o, $(SRC))
 SRC		:=	$(addprefix $(SRC_DIR)/,$(SRC))

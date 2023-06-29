@@ -47,5 +47,6 @@ bool	cub_init(t_cubed *cub)
 		return (false);
 	if (mlx_image_to_window(cub->mlx, cub->img, 0, 0) == -1)
 		return (false);
+	draw_map(cub);
 	return (true);
 }

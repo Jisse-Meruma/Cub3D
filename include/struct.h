@@ -55,6 +55,24 @@ typedef struct s_map
 
 }	t_map;
 
+typedef struct	s_raycast
+{
+	double	camx;
+	double	raydirX;
+	double	raydirY;
+	int		mapX;
+	int		mapY;
+	float	sideDistX;
+	float	sideDistY;
+	float	deltaDistX;
+	float	deltaDistY;
+	float	perpWallDist;
+	int		stepX;
+	int		stepY;
+	int		hit;
+	int		side;
+}	t_raycast;
+
 typedef struct s_player
 {
 	t_vec	dir;

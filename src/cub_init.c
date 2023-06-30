@@ -3,26 +3,28 @@
 void	get_player_orientation(t_cubed *cub)
 {
 	
-	if (cub->map.map[cub->map.py][cub->map.py] == PNORTH)
+	if (cub->map.map[cub->map.py][cub->map.px] == PNORTH)
 	{
 		cub->player.dir.x = 0;
 		cub->player.dir.y = 1;
 	}
-	else if (cub->map.map[cub->map.py][cub->map.py] == PEAST)
+	else if (cub->map.map[cub->map.py][cub->map.px] == PEAST)
 	{
 		cub->player.dir.x = 1;
 		cub->player.dir.y = 0;
 	}
-	else if (cub->map.map[cub->map.py][cub->map.py] == PSOUTH)
+	else if (cub->map.map[cub->map.py][cub->map.px] == PSOUTH)
 	{
 		cub->player.dir.x = 0;
 		cub->player.dir.y = -1;
 	}
-	else if (cub->map.map[cub->map.py][cub->map.py] == PWEST)
+	else if (cub->map.map[cub->map.py][cub->map.px] == PWEST)
 	{
 		cub->player.dir.x = -1;
 		cub->player.dir.y = 0;
 	}
+	printf("init playerdirXY: %f, %f\ninit c_planeXY: %f, %f\n", cub->player.dir.x, cub->player.dir.y, cub->player.c_plane.x, cub->player.c_plane.y);
+
 }
 
 bool	player_init(t_cubed *cub)
@@ -31,6 +33,7 @@ bool	player_init(t_cubed *cub)
 	cub->player.pos.x = cub->map.px;
 	cub->player.pos.y = cub->map.py;
 	cub->player.c_plane = vec_rotate(cub->player.dir, 90);
+	printf("init playerdirXY: %f, %f\ninit c_planeXY: %f, %f\n", cub->player.dir.x, cub->player.dir.y, cub->player.c_plane.x, cub->player.c_plane.y);
 	return (true);
 }
 

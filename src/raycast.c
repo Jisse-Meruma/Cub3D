@@ -1,3 +1,4 @@
+#include "MLX42.h"
 #include <cub3d.h>
 #include <math.h>
 
@@ -10,11 +11,12 @@ void	draw_wall_segment(int x, float perpWallDist, int scale, t_cubed *cub, int s
 	int	drawend;
 	unsigned int	color;
 
+	printf("perpWallDist: %f\n", perpWallDist);
 	lineHeight = (int)(WINDOW_HEIGHT / perpWallDist);
-	drawstart = (-lineHeight / 2) + ((WINDOW_HEIGHT * scale) / 2);
+	drawstart = (-lineHeight / 2) + ((WINDOW_HEIGHT) / 2);
 	if (drawstart < 0)
 		drawstart = 0;
-	drawend = (lineHeight / 2) + ((WINDOW_HEIGHT * scale) / 2);
+	drawend = (lineHeight / 2) + ((WINDOW_HEIGHT) / 2);
 	if (drawend >= WINDOW_HEIGHT * scale)
 		drawend = (WINDOW_HEIGHT * scale) - 1;
 	color = 0xFF00FFFF;
@@ -51,13 +53,16 @@ void	raycast(t_cubed *cub)
 	t_raycast	r;
 
 	x = 0;
-	r.mapX = cub->player.pos.x;
-	r.mapY = cub->player.pos.y;
+	printf("playerXY: %f,%f\n", cub->player.pos.x, cub->player.pos.y);
 	while (x < WINDOW_WIDTH)
 	{
-		r.camx = ((2 * x) / WINDOW_WIDTH) - 1;
+		r.mapX = (int)cub->player.pos.x;
+		r.mapY = (int)cub->player.pos.y;
+		mlx_put_pixel(cub->img, x, WINDOW_HEIGHT / 2, 0xFF00FFFF);
+		r.camx = (float)((2 * x) / (float)WINDOW_WIDTH) - 1.0;
 		r.raydirX = cub->player.dir.x + cub->player.c_plane.x * r.camx;
 		r.raydirY = cub->player.dir.y + cub->player.c_plane.y * r.camx;
+		printf("playerdirXY: %f, %f\ncplaneXY:%f, %f\n",cub->player.dir.x, cub->player.dir.y, cub->player.c_plane.x, cub->player.c_plane.y);
 		if (r.raydirX == 0)
 			r.deltaDistX = 1e30;
 		else
@@ -89,31 +94,35 @@ void	raycast(t_cubed *cub)
 		}
 		r.hit = 0;
 		// perform DDA
-		// while (r.hit == 0)
-		// {
-		// 	// jump to next map square, either in x-direction, or in y-direction.
-		// 	if (r.sideDistX < r.sideDistY)
-		// 	{
-		// 		r.sideDistX += r.deltaDistX;
-		// 		r.mapX += r.stepX;
-		// 		r.side = 0;
-		// 	}
-		// 	else
-		// 	{
-		// 		r.sideDistY += r.deltaDistY;
-		// 		r.mapY += r.stepY;
-		// 		r.side = 1;
-		// 	}
-		// 	if (r.mapX < cub->map.width && r.mapY < cub->map.height
-		// 			&& r.mapX > 0 && r.mapY > 0 
-		// 			&& cub->map.map[r.mapY][r.mapX] > (t_tile)1)
-		// 		r.hit = 1;
-		// }
-		// if (r.side == 0)
-		// 	r.perpWallDist = (r.sideDistX - r.deltaDistX);
-		// else
-		// 	r.perpWallDist = (r.sideDistY - r.deltaDistY);
-		// draw_wall_segment(x, r.perpWallDist, 1, cub, r.side);
+		while (r.hit == 0)
+		{
+			// jump to next map square, either in x-direction, or in y-direction.
+			if (r.sideDistX < r.sideDistY)
+			{
+				r.sideDistX += r.deltaDistX;
+				r.mapX += r.stepX;
+				r.side = 0;
+			}
+			else
+			{
+				r.sideDistY += r.deltaDistY;
+				r.mapY += r.stepY;
+				r.side = 1;
+			}
+			if (r.mapX < cub->map.width && r.mapY < cub->map.height
+					&& r.mapX >= 0 && r.mapY >= 0 
+					&& cub->map.map[r.mapY][r.mapX] > (t_tile)1)
+				r.hit = 1;
+			mlx_put_pixel(cub->img, r.mapX, r.mapY, 0xFF0000FF);
+			printf("mapX: %i, mapY: %i\n", r.mapX, r.mapY);
+			// r.hit = 1;
+		}
+		printf("sideDistX: %f, sideDistY: %f\n", r.sideDistX, r.sideDistY);
+		if (r.side == 0)
+			r.perpWallDist = (r.sideDistX - r.deltaDistX);
+		else
+			r.perpWallDist = (r.sideDistY - r.deltaDistY);
+		draw_wall_segment(x, r.perpWallDist, 1, cub, r.side);
 		x++;
 	}
 }

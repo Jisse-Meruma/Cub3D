@@ -4,7 +4,6 @@
 #include <math.h>
 #include <stdint.h>
 
-
 // function to draw a line of the wall.
 void	draw_wall_segment(uint32_t x, t_raycast r, t_cubed *cub, int side)
 {
@@ -12,10 +11,8 @@ void	draw_wall_segment(uint32_t x, t_raycast r, t_cubed *cub, int side)
 	int	drawstart;
 	uint32_t	drawend;
 	unsigned int	color;
-	// int				wall_height;
+	float			color_falloff;
 
-	// wall_height = cub->img->width / 3;
-	// printf("perpWallDist: %f\n", perpWallDist);
 	lineHeight = (cub->img->width / r.perpWallDist) / cub->fov;
 	drawstart = (-lineHeight / 2) + ((cub->img->height) / 2);
 	if (drawstart < 0)
@@ -23,12 +20,15 @@ void	draw_wall_segment(uint32_t x, t_raycast r, t_cubed *cub, int side)
 	drawend = (lineHeight / 2) + ((cub->img->height) / 2);
 	if (drawend >= cub->img->height)
 		drawend = cub->img->height - 1;
-	color = 0x7700FFFF;
+	if (r.perpWallDist + 1 < 0)
+		color_falloff = 0;
+	else
+	 	color_falloff = cos(r.perpWallDist + 1);
+	color = 0x7700FF00 | (0x000000FF & (int)(255 / (color_falloff)));
 	if (side == 1)
-		color = color / 2;
+		color = ((color / 2) & 0xFF000000) | ((color / 2) & 0x00FF0000) | ((color / 2) & 0x0000FF00) | (color & 0x000000FF);
 	uint32_t y;
 	y = drawstart;
-	//printf("drawstart: %i, drawend: %i\n", drawstart, drawend);
 	while (y <= drawend)
 	{
 		mlx_put_pixel(cub->img, x, y, color);

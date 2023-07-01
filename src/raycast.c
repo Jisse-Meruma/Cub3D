@@ -1,28 +1,32 @@
 #include "MLX42.h"
+#include "struct.h"
 #include <cub3d.h>
 #include <math.h>
+#include <stdint.h>
 
 
 // function to draw a line of the wall.
-void	draw_wall_segment(int x, float perpWallDist, int scale, t_cubed *cub, int side)
+void	draw_wall_segment(uint32_t x, t_raycast r, t_cubed *cub, int side)
 {
 	int	lineHeight;
 	int	drawstart;
-	int	drawend;
+	uint32_t	drawend;
 	unsigned int	color;
+	// int				wall_height;
 
+	// wall_height = cub->img->width / 3;
 	// printf("perpWallDist: %f\n", perpWallDist);
-	lineHeight = (int)(WINDOW_HEIGHT / perpWallDist);
-	drawstart = (-lineHeight / 2) + ((WINDOW_HEIGHT) / 2);
+	lineHeight = (cub->img->width / r.perpWallDist) / cub->fov;
+	drawstart = (-lineHeight / 2) + ((cub->img->height) / 2);
 	if (drawstart < 0)
 		drawstart = 0;
-	drawend = (lineHeight / 2) + ((WINDOW_HEIGHT) / 2);
-	if (drawend >= WINDOW_HEIGHT)
-		drawend = WINDOW_HEIGHT - 1;
+	drawend = (lineHeight / 2) + ((cub->img->height) / 2);
+	if (drawend >= cub->img->height)
+		drawend = cub->img->height - 1;
 	color = 0x7700FFFF;
 	if (side == 1)
 		color = color / 2;
-	int y;
+	uint32_t y;
 	y = drawstart;
 	//printf("drawstart: %i, drawend: %i\n", drawstart, drawend);
 	while (y <= drawend)
@@ -49,19 +53,19 @@ void	draw_wall_segment(int x, float perpWallDist, int scale, t_cubed *cub, int s
 */
 void	raycast(t_cubed *cub)
 {
-	int	x;
+	uint32_t	x;
 	t_raycast	r;
 
 	x = 0;
 	// printf("playerXY: %f,%f\n", cub->player.pos.x, cub->player.pos.y);
-	while (x < WINDOW_WIDTH)
+	while (x < cub->img->width)
 	{
 		r.mapX = (int)cub->player.pos.x;
 		r.mapY = (int)cub->player.pos.y;
-		// mlx_put_pixel(cub->img, x, WINDOW_HEIGHT / 2, 0xFF00FFFF);
-		r.camx = 2.0 * x / WINDOW_WIDTH - 1.0;
-		r.raydirX = cub->player.dir.x + cub->player.c_plane.x * r.camx;
-		r.raydirY = cub->player.dir.y + cub->player.c_plane.y * r.camx;
+		// mlx_put_pixel(cub->img, x, cub->img->height / 2, 0xFF00FFFF);
+		r.camx = cub->fov * ((float)x / cub->img->width) - (cub->fov / 2);
+		r.raydirX = cub->player.dir.x + (cub->player.c_plane.x) * r.camx;
+		r.raydirY = cub->player.dir.y + (cub->player.c_plane.y) * r.camx;
 		// printf("playerdirXY: %f, %f\ncplaneXY:%f, %f\n",cub->player.dir.x, cub->player.dir.y, cub->player.c_plane.x, cub->player.c_plane.y);
 		if (r.raydirX == 0)
 			r.deltaDistX = 1e30;
@@ -122,7 +126,7 @@ void	raycast(t_cubed *cub)
 			r.perpWallDist = (r.sideDistX - r.deltaDistX);
 		else
 			r.perpWallDist = (r.sideDistY - r.deltaDistY);
-		draw_wall_segment(x, r.perpWallDist, 1, cub, r.side);
+		draw_wall_segment(x, r, cub, r.side);
 		x++;
 	}
 }

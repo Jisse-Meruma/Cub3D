@@ -38,4 +38,8 @@ bool	cub_loop(t_cubed *cub);
 // Cub3d functions
 t_vec	vec_rotate(t_vec vec, float angle);
 void	raycast(t_cubed *cub);
+
+// Cub3d cleanup
+bool	cub_end(t_cubed *cub);
+
 #endif

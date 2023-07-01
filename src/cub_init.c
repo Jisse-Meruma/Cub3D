@@ -34,7 +34,7 @@ bool	player_init(t_cubed *cub)
 	cub->player.pos.y = cub->map.py;
 	cub->player.c_plane = vec_rotate(cub->player.dir, -90);
 	cub->player.move_speed = 10;
-	cub->player.turn_speed = 100;
+	cub->player.turn_speed = 200;
 	printf("init playerdirXY: %f, %f\ninit c_planeXY: %f, %f\n", cub->player.dir.x, cub->player.dir.y, cub->player.c_plane.x, cub->player.c_plane.y);
 	return (true);
 }
@@ -52,6 +52,7 @@ bool	cub_init(t_cubed *cub)
 		return (false);
 	if (mlx_image_to_window(cub->mlx, cub->img, 0, 0) == -1)
 		return (false);
+	cub->fov = 3.0;
 	// draw_map(cub);
 	return (true);
 }

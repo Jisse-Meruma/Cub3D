@@ -19,5 +19,7 @@ int main(int argc, char *argv[])
 		return (false);
 	if (!cub_loop(&cub))
 		return (false);
+	if (!cub_end(&cub))
+		return (false);
 	return (EXIT_SUCCESS);
 }

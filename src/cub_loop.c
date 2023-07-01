@@ -1,6 +1,7 @@
 #include "MLX42.h"
 #include "struct.h"
 #include <cub3d.h>
+#include <stdint.h>
 
 void	draw_tile(int x, int y, unsigned int tile_scale, mlx_image_t *img, unsigned int color)
 {
@@ -78,11 +79,12 @@ void	cub_movement_check(t_cubed *cub)
 	t_vec	move_vec;
 
 	move_vec = cub_get_move_vec(cub);
-	if (cub->map.map[(int)(cub->player.pos.y + move_vec.y)][(int)(cub->player.pos.x + move_vec.x)] == 1)
+	if (cub->map.map[(int)(cub->player.pos.y)][(int)(cub->player.pos.x + move_vec.x)] == 1)
 	{
 		cub->player.pos.x += move_vec.x;
-		cub->player.pos.y += move_vec.y;
 	}
+	if (cub->map.map[(int)(cub->player.pos.y + move_vec.y)][(int)(cub->player.pos.x)] == 1)	
+		cub->player.pos.y += move_vec.y;
 }
 
 void	cub_controls(t_cubed *cub)
@@ -102,6 +104,22 @@ void	cub_controls(t_cubed *cub)
 		cub->player.c_plane = vec_rotate(cub->player.c_plane, cub->mlx->delta_time * cub->player.turn_speed);
 	}
 	cub_movement_check(cub);
+	if (mlx_is_key_down(cub->mlx, MLX_KEY_EQUAL))
+		cub->fov += 0.01;
+	if (mlx_is_key_down(cub->mlx, MLX_KEY_MINUS))
+		cub->fov -= 0.01;
+}
+
+bool	cub_update_image_scale(t_cubed *cub)
+{
+	if ((uint32_t)cub->mlx->width != cub->img->width || (uint32_t)cub->mlx->height != cub->img->height)
+	{
+		mlx_delete_image(cub->mlx, cub->img);
+		cub->img = mlx_new_image(cub->mlx, cub->mlx->width, cub->mlx->height);
+		mlx_image_to_window(cub->mlx, cub->img, 0, 0);
+		return (true);
+	}
+	return (false);
 }
 
 void	cub_frame(void *param)
@@ -110,8 +128,10 @@ void	cub_frame(void *param)
 
 	cub = (t_cubed *)param;
 	 //draw_map(cub);
+	if (cub_update_image_scale(cub))
+		return ;
 	cub_controls(cub);
-	ft_bzero(cub->img->pixels, (cub->img->width * cub->img->height) * 8);
+	ft_bzero(cub->img->pixels, (cub->img->width * cub->img->height) * 4);
 	raycast(cub);
 	// printf("1\n");
 }
@@ -120,7 +140,6 @@ bool	cub_loop(t_cubed *cub)
 {
 	if (!mlx_loop_hook(cub->mlx, cub_frame, (void *)cub))
 		return (false);
-	usleep(100);
 	mlx_loop(cub->mlx);
 	return (true);
 }

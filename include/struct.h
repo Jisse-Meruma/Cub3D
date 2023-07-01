@@ -88,6 +88,7 @@ typedef struct s_cubed
 	t_map		map;
 	mlx_t		*mlx;
 	mlx_image_t	*img;
+	float		fov;
 }	t_cubed;
 
 typedef void (*t_func) (t_elements *, char *);

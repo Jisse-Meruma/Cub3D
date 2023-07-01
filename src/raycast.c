@@ -11,15 +11,15 @@ void	draw_wall_segment(int x, float perpWallDist, int scale, t_cubed *cub, int s
 	int	drawend;
 	unsigned int	color;
 
-	printf("perpWallDist: %f\n", perpWallDist);
+	// printf("perpWallDist: %f\n", perpWallDist);
 	lineHeight = (int)(WINDOW_HEIGHT / perpWallDist);
 	drawstart = (-lineHeight / 2) + ((WINDOW_HEIGHT) / 2);
 	if (drawstart < 0)
 		drawstart = 0;
 	drawend = (lineHeight / 2) + ((WINDOW_HEIGHT) / 2);
-	if (drawend >= WINDOW_HEIGHT * scale)
-		drawend = (WINDOW_HEIGHT * scale) - 1;
-	color = 0xFF00FFFF;
+	if (drawend >= WINDOW_HEIGHT)
+		drawend = WINDOW_HEIGHT - 1;
+	color = 0x7700FFFF;
 	if (side == 1)
 		color = color / 2;
 	int y;
@@ -53,16 +53,16 @@ void	raycast(t_cubed *cub)
 	t_raycast	r;
 
 	x = 0;
-	printf("playerXY: %f,%f\n", cub->player.pos.x, cub->player.pos.y);
+	// printf("playerXY: %f,%f\n", cub->player.pos.x, cub->player.pos.y);
 	while (x < WINDOW_WIDTH)
 	{
 		r.mapX = (int)cub->player.pos.x;
 		r.mapY = (int)cub->player.pos.y;
-		mlx_put_pixel(cub->img, x, WINDOW_HEIGHT / 2, 0xFF00FFFF);
-		r.camx = (float)((2 * x) / (float)WINDOW_WIDTH) - 1.0;
+		// mlx_put_pixel(cub->img, x, WINDOW_HEIGHT / 2, 0xFF00FFFF);
+		r.camx = 2.0 * x / WINDOW_WIDTH - 1.0;
 		r.raydirX = cub->player.dir.x + cub->player.c_plane.x * r.camx;
 		r.raydirY = cub->player.dir.y + cub->player.c_plane.y * r.camx;
-		printf("playerdirXY: %f, %f\ncplaneXY:%f, %f\n",cub->player.dir.x, cub->player.dir.y, cub->player.c_plane.x, cub->player.c_plane.y);
+		// printf("playerdirXY: %f, %f\ncplaneXY:%f, %f\n",cub->player.dir.x, cub->player.dir.y, cub->player.c_plane.x, cub->player.c_plane.y);
 		if (r.raydirX == 0)
 			r.deltaDistX = 1e30;
 		else
@@ -113,11 +113,11 @@ void	raycast(t_cubed *cub)
 					&& r.mapX >= 0 && r.mapY >= 0 
 					&& cub->map.map[r.mapY][r.mapX] > (t_tile)1)
 				r.hit = 1;
-			mlx_put_pixel(cub->img, r.mapX, r.mapY, 0xFF0000FF);
-			printf("mapX: %i, mapY: %i\n", r.mapX, r.mapY);
+			// mlx_put_pixel(cub->img, r.mapX, r.mapY, 0xFF0000FF);
+			// printf("mapX: %i, mapY: %i\n", r.mapX, r.mapY);
 			// r.hit = 1;
 		}
-		printf("sideDistX: %f, sideDistY: %f\n", r.sideDistX, r.sideDistY);
+		// printf("sideDistX: %f, sideDistY: %f\n", r.sideDistX, r.sideDistY);
 		if (r.side == 0)
 			r.perpWallDist = (r.sideDistX - r.deltaDistX);
 		else

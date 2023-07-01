@@ -55,6 +55,10 @@ ifdef DEBUG
 	DEBUGGING += DEBUG=1
 endif
 
+ifdef OPTIMIZE
+	CFLAGS += -Ofast
+endif
+
 ifeq ($(UNAME_S), Linux)
 	MLXLIB += -lglfw -ldl -pthread -lm
 else
@@ -111,4 +115,7 @@ clean_cc:
 debug:
 	@make DEBUG=1
 
-.PHONY: clean all fclean re libmlx depclean rere cc clean_cc debug
+optimize:
+	@make OPTIMIZE=1
+
+.PHONY: clean all fclean re libmlx depclean rere cc clean_cc debug optimize

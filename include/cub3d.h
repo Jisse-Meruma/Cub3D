@@ -7,8 +7,8 @@
 # include <fcntl.h>
 # include <stdio.h>
 
-# define WINDOW_WIDTH 1920
-# define WINDOW_HEIGHT 1080
+# define WINDOW_WIDTH 720
+# define WINDOW_HEIGHT 720
 
 // Parser functions
 bool	parser(char *map_config, t_map *map);
@@ -31,6 +31,9 @@ void floor_parse(t_elements *element, char *path);
 
 // Cub3d initilization
 bool	cub_init(t_cubed *cub);
+
+// Cub3d loop
+bool	cub_loop(t_cubed *cub);
 
 // Cub3d functions
 t_vec	vec_rotate(t_vec vec, float angle);

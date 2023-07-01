@@ -44,33 +44,62 @@ void	draw_map(t_cubed *cub)
 	}
 }
 
-void	cub_movement_check(t_cubed *cub)
+t_vec	cub_get_move_vec(t_cubed *cub)
 {
+	t_vec	move_vec;
+
+	move_vec.x = 0;
+	move_vec.y = 0;
 	if (mlx_is_key_down(cub->mlx, MLX_KEY_W))
 	{
-		cub->player.pos.x += cub->player.dir.x * 0.1;
-		cub->player.pos.y += cub->player.dir.y * 0.1;
+		move_vec.x += cub->player.dir.x * cub->mlx->delta_time * cub->player.move_speed;
+		move_vec.y += cub->player.dir.y * cub->mlx->delta_time * cub->player.move_speed;
+	}
+	if (mlx_is_key_down(cub->mlx, MLX_KEY_S))
+	{
+		move_vec.x -= cub->player.dir.x * cub->mlx->delta_time * cub->player.move_speed;
+		move_vec.y -= cub->player.dir.y * cub->mlx->delta_time * cub->player.move_speed;
+	}
+	if (mlx_is_key_down(cub->mlx, MLX_KEY_D))
+	{
+		move_vec.x += vec_rotate(cub->player.dir, -90).x * cub->mlx->delta_time * cub->player.move_speed;
+		move_vec.y += vec_rotate(cub->player.dir, -90).y * cub->mlx->delta_time * cub->player.move_speed;
+	}
+	if (mlx_is_key_down(cub->mlx, MLX_KEY_A))
+	{
+		move_vec.x -= vec_rotate(cub->player.dir, -90).x * cub->mlx->delta_time * cub->player.move_speed;
+		move_vec.y -= vec_rotate(cub->player.dir, -90).y * cub->mlx->delta_time * cub->player.move_speed;
+	}
+	return (move_vec);
+}
+
+void	cub_movement_check(t_cubed *cub)
+{
+	t_vec	move_vec;
+
+	move_vec = cub_get_move_vec(cub);
+	if (cub->map.map[(int)(cub->player.pos.y + move_vec.y)][(int)(cub->player.pos.x + move_vec.x)] == 1)
+	{
+		cub->player.pos.x += move_vec.x;
+		cub->player.pos.y += move_vec.y;
 	}
 }
 
 void	cub_controls(t_cubed *cub)
 {
-	int	rotate_speed;
-
-	rotate_speed = 60;
 	if (mlx_is_key_down(cub->mlx, MLX_KEY_ESCAPE))
 	{
 		mlx_close_window(cub->mlx);
 	}
 	if (mlx_is_key_down(cub->mlx, MLX_KEY_RIGHT))
 	{
-		cub->player.dir = vec_rotate(cub->player.dir, cub->mlx->delta_time * -rotate_speed);
-		cub->player.c_plane = vec_rotate(cub->player.c_plane, cub->mlx->delta_time * -rotate_speed);
+		cub->player.dir = vec_rotate(cub->player.dir, cub->mlx->delta_time * -cub->player.turn_speed);
+		cub->player.c_plane = vec_rotate(cub->player.c_plane, cub->mlx->delta_time * -cub->player.turn_speed);
 	}
 	if (mlx_is_key_down(cub->mlx, MLX_KEY_LEFT))
 	{
-		cub->player.dir = vec_rotate(cub->player.dir,cub->mlx->delta_time * rotate_speed);
-		cub->player.c_plane = vec_rotate(cub->player.c_plane, cub->mlx->delta_time * rotate_speed);
+		cub->player.dir = vec_rotate(cub->player.dir,cub->mlx->delta_time * cub->player.turn_speed);
+		cub->player.c_plane = vec_rotate(cub->player.c_plane, cub->mlx->delta_time * cub->player.turn_speed);
 	}
 	cub_movement_check(cub);
 }
@@ -91,6 +120,7 @@ bool	cub_loop(t_cubed *cub)
 {
 	if (!mlx_loop_hook(cub->mlx, cub_frame, (void *)cub))
 		return (false);
+	usleep(100);
 	mlx_loop(cub->mlx);
 	return (true);
 }

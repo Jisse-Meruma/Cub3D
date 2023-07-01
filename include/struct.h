@@ -78,6 +78,8 @@ typedef struct s_player
 	t_vec	dir;
 	t_vec	pos;
 	t_vec	c_plane;
+	float	move_speed;
+	float	turn_speed;
 }	t_player;
 
 typedef struct s_cubed

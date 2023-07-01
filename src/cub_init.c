@@ -33,6 +33,8 @@ bool	player_init(t_cubed *cub)
 	cub->player.pos.x = cub->map.px;
 	cub->player.pos.y = cub->map.py;
 	cub->player.c_plane = vec_rotate(cub->player.dir, -90);
+	cub->player.move_speed = 10;
+	cub->player.turn_speed = 100;
 	printf("init playerdirXY: %f, %f\ninit c_planeXY: %f, %f\n", cub->player.dir.x, cub->player.dir.y, cub->player.c_plane.x, cub->player.c_plane.y);
 	return (true);
 }

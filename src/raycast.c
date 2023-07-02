@@ -20,13 +20,13 @@ void	draw_wall_segment(uint32_t x, t_raycast r, t_cubed *cub, int side)
 	drawend = (lineHeight / 2) + ((cub->img->height) / 2);
 	if (drawend >= cub->img->height)
 		drawend = cub->img->height - 1;
-	if (r.perpWallDist + 1 < 0)
-		color_falloff = 0;
+	if (r.perpWallDist / cub->render_distance < 1.0)
+		color_falloff = 1 / cos((r.perpWallDist / cub->render_distance) * (M_PI / 2));
 	else
-	 	color_falloff = cos(r.perpWallDist + 1);
-	color = 0x7700FF00 | (0x000000FF & (int)(255 / (color_falloff)));
+	 	color_falloff = 1 / cos(M_PI / 2);
+	color = 0x77777700 | (0x000000FF & (int)(255 / (color_falloff)));
 	if (side == 1)
-		color = ((color / 2) & 0xFF000000) | ((color / 2) & 0x00FF0000) | ((color / 2) & 0x0000FF00) | (color & 0x000000FF);
+		color = 0x55555500 | (0x000000FF & (int)(255 / (color_falloff)));;
 	uint32_t y;
 	y = drawstart;
 	while (y <= drawend)
@@ -35,6 +35,27 @@ void	draw_wall_segment(uint32_t x, t_raycast r, t_cubed *cub, int side)
 		y++;
 	}
 }
+
+// float	get_real_dist(t_cubed *cub, t_raycast r)
+// {
+// 	float	realDist;
+// 	float	Xcomponent;
+// 	float	Ycomponent;
+//
+// 	if (r.side == 1)
+// 	{
+// 		Xcomponent = cub->player.pos.x + r.mapX + (cub->player.pos.x - (int)cub->player.pos.x) * r.deltaDistX;
+// 		Ycomponent =  cub->player.pos.y + r.mapY + (cub->player.pos.y - (int)cub->player.pos.y) * r.deltaDistY;
+// 	}
+// 	else
+// 	{
+// 		Ycomponent = (r.sideDistY - r.deltaDistY) * cub->player.dir.y;
+// 		Xcomponent = r.sideDistX * cub->player.dir.x;
+//
+// 	}
+// 	realDist = sqrt((Xcomponent * Xcomponent) + (Ycomponent * Ycomponent));
+// 	return (realDist);
+// }
 
 /*
 	r.mapX and r.mapY represent the current square of the map the ray is in.
@@ -117,15 +138,18 @@ void	raycast(t_cubed *cub)
 					&& r.mapX >= 0 && r.mapY >= 0 
 					&& cub->map.map[r.mapY][r.mapX] > (t_tile)1)
 				r.hit = 1;
-			// mlx_put_pixel(cub->img, r.mapX, r.mapY, 0xFF0000FF);
-			// printf("mapX: %i, mapY: %i\n", r.mapX, r.mapY);
-			// r.hit = 1;
 		}
-		// printf("sideDistX: %f, sideDistY: %f\n", r.sideDistX, r.sideDistY);
+		// Remove delta distance to get to the side of the 'square' that is next to the wall
 		if (r.side == 0)
+		{
 			r.perpWallDist = (r.sideDistX - r.deltaDistX);
+			// r.realWallDist = get_real_dist(cub, r);
+		}
 		else
+		{
 			r.perpWallDist = (r.sideDistY - r.deltaDistY);
+			// r.realWallDist = get_real_dist(cub, r);
+		}
 		draw_wall_segment(x, r, cub, r.side);
 		x++;
 	}

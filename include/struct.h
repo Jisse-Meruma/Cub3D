@@ -67,6 +67,7 @@ typedef struct	s_raycast
 	float	deltaDistX;
 	float	deltaDistY;
 	float	perpWallDist;
+	float	realWallDist;
 	int		stepX;
 	int		stepY;
 	int		hit;
@@ -89,6 +90,7 @@ typedef struct s_cubed
 	mlx_t		*mlx;
 	mlx_image_t	*img;
 	float		fov;
+	float		render_distance;
 }	t_cubed;
 
 typedef void (*t_func) (t_elements *, char *);

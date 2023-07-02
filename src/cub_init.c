@@ -53,6 +53,7 @@ bool	cub_init(t_cubed *cub)
 	if (mlx_image_to_window(cub->mlx, cub->img, 0, 0) == -1)
 		return (false);
 	cub->fov = 3.0;
+	cub->render_distance = 5;
 	// draw_map(cub);
 	return (true);
 }

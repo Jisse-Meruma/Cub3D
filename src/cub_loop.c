@@ -122,6 +122,27 @@ bool	cub_update_image_scale(t_cubed *cub)
 	return (false);
 }
 
+void	draw_floor_and_ceiling(t_cubed *cub)
+{
+	uint32_t	x;
+	uint32_t	y;
+
+	y = 0;
+	while (y < cub->img->height)
+	{
+		x = 0;
+		while (x < cub->img->width)
+		{
+			if (y < cub->img->height / 2)
+				mlx_put_pixel(cub->img, x, y, cub->map.elements.col_ceiling);
+			else
+			 mlx_put_pixel(cub->img, x, y, cub->map.elements.col_floor);
+			x++;
+		}
+		y++;
+	}
+}
+
 void	cub_frame(void *param)
 {
 	t_cubed	*cub;
@@ -132,6 +153,7 @@ void	cub_frame(void *param)
 		return ;
 	cub_controls(cub);
 	ft_bzero(cub->img->pixels, (cub->img->width * cub->img->height) * 4);
+	draw_floor_and_ceiling(cub);
 	raycast(cub);
 	// printf("1\n");
 }

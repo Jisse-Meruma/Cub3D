@@ -57,12 +57,96 @@ void	draw_wall_segment(uint32_t x, t_raycast r, t_cubed *cub, int side)
 // 	return (realDist);
 // }
 
+
+/* determine the distance to the first x and first y side
+   */
+void	init_step_and_side_dist(t_raycast *r, t_cubed *cub)
+{
+		if (r->raydirX < 0)
+		{
+			r->stepX = -1;
+			r->sideDistX = (cub->player.pos.x - r->mapX) * r->deltaDistX;
+		}
+		else
+		{
+			r->stepX = 1;
+			r->sideDistX = (r->mapX + 1.0 - cub->player.pos.x) * r->deltaDistX;
+		}
+		if (r->raydirY < 0)
+		{
+			r->stepY = -1;
+			r->sideDistY = (cub->player.pos.y - r->mapY) * r->deltaDistY;
+		}
+		else
+		{
+			r->stepY = 1;
+			r->sideDistY = (r->mapY + 1.0 - cub->player.pos.y) * r->deltaDistY;
+		}
+}
+
+
+
+/*
+	initialize values needed for the current ray being cast.
+	Setting/resetting the current map coordinates.
+	Determining the relative x on the "camera plane" position. A value between -1 and 1 with 0 being the middle of the screen and "camera plane".
+	Then setting the ray direction. Based on the "camera plane", player direction and camx vectors.
+	Then determine the ratio of the ray direction, needed to travel from one side of a square, to the other side of the same square.
+	This is not the actual distance but a vector that has the correct ratio.
+	This distance is stored as deltaDistX and deltaDistY.
+	The square is 1 by 1. So there is an easy way to compute this. If you divide 1 by the x or y component of a vector you get the relative size of each component on its own.
+*/
+void	init_ray(uint32_t x, t_raycast *r, t_cubed *cub)
+{
+		r->mapX = (int)cub->player.pos.x;
+		r->mapY = (int)cub->player.pos.y;
+		r->camx = cub->fov * ((float)x / cub->img->width) - (cub->fov / 2);
+		r->raydirX = cub->player.dir.x + (cub->player.c_plane.x) * r->camx;
+		r->raydirY = cub->player.dir.y + (cub->player.c_plane.y) * r->camx;
+		if (r->raydirX == 0)
+			r->deltaDistX = 1e30;
+		else
+			r->deltaDistX = fabs(1 / r->raydirX);
+		if (r->raydirY == 0)
+			r->deltaDistY = 1e30;
+		else
+			r->deltaDistY = fabs(1 / r->raydirY);
+		init_step_and_side_dist(r, cub);
+		r->hit = 0;
+}
+/* DDA loop
+   here the actual steps are taken to see when a wall is hit.
+*/
+void	ray_loop(t_raycast *r, t_cubed *cub)
+{
+		while (r->hit == 0)
+		{
+			// jump to next map square, either in x-direction, or in y-direction.
+			if (r->sideDistX < r->sideDistY)
+			{
+				r->sideDistX += r->deltaDistX;
+				r->mapX += r->stepX;
+				r->side = 0;
+			}
+			else
+			{
+				r->sideDistY += r->deltaDistY;
+				r->mapY += r->stepY;
+				r->side = 1;
+			}
+			if (r->mapX < cub->map.width && r->mapY < cub->map.height
+					&& r->mapX >= 0 && r->mapY >= 0 
+					&& cub->map.map[r->mapY][r->mapX] > (t_tile)1)
+				r->hit = 1;
+		}
+}
+
 /*
 	r.mapX and r.mapY represent the current square of the map the ray is in.
 	stepX and r.stepY are either -1 or +1 and determine in which direction a step needs to be taken.
 	sideDistX and sideDistY are initially the distance the ray has to travel from its start position to the first x side and the first y side.
-
-	side determines if the side hit was NS or EW
+	Then gets updated to the next x or y side, based on the actual step being taken.
+	side determines if the side hit was North South or East West. (NS/Yaxis EW/Xaxis)
 
 	Now the actual DDA starts.
 	It's a loop that increments the ray with 1 square every time, until a wall is hit.
@@ -78,67 +162,11 @@ void	raycast(t_cubed *cub)
 	t_raycast	r;
 
 	x = 0;
-	// printf("playerXY: %f,%f\n", cub->player.pos.x, cub->player.pos.y);
 	while (x < cub->img->width)
 	{
-		r.mapX = (int)cub->player.pos.x;
-		r.mapY = (int)cub->player.pos.y;
-		// mlx_put_pixel(cub->img, x, cub->img->height / 2, 0xFF00FFFF);
-		r.camx = cub->fov * ((float)x / cub->img->width) - (cub->fov / 2);
-		r.raydirX = cub->player.dir.x + (cub->player.c_plane.x) * r.camx;
-		r.raydirY = cub->player.dir.y + (cub->player.c_plane.y) * r.camx;
-		// printf("playerdirXY: %f, %f\ncplaneXY:%f, %f\n",cub->player.dir.x, cub->player.dir.y, cub->player.c_plane.x, cub->player.c_plane.y);
-		if (r.raydirX == 0)
-			r.deltaDistX = 1e30;
-		else
-			r.deltaDistX = fabs(1 / r.raydirX);
-		if (r.raydirY == 0)
-			r.deltaDistY = 1e30;
-		else
-			r.deltaDistY = fabs(1 / r.raydirY);
-		// calculate step and initial sideDist 
-		if (r.raydirX < 0)
-		{
-			r.stepX = -1;
-			r.sideDistX = (cub->player.pos.x - r.mapX) * r.deltaDistX;
-		}
-		else
-		{
-			r.stepX = 1;
-			r.sideDistX = (r.mapX + 1.0 - cub->player.pos.x) * r.deltaDistX;
-		}
-		if (r.raydirY < 0)
-		{
-			r.stepY = -1;
-			r.sideDistY = (cub->player.pos.y - r.mapY) * r.deltaDistY;
-		}
-		else
-		{
-			r.stepY = 1;
-			r.sideDistY = (r.mapY + 1.0 - cub->player.pos.y) * r.deltaDistY;
-		}
-		r.hit = 0;
+		init_ray(x, &r, cub);
 		// perform DDA
-		while (r.hit == 0)
-		{
-			// jump to next map square, either in x-direction, or in y-direction.
-			if (r.sideDistX < r.sideDistY)
-			{
-				r.sideDistX += r.deltaDistX;
-				r.mapX += r.stepX;
-				r.side = 0;
-			}
-			else
-			{
-				r.sideDistY += r.deltaDistY;
-				r.mapY += r.stepY;
-				r.side = 1;
-			}
-			if (r.mapX < cub->map.width && r.mapY < cub->map.height
-					&& r.mapX >= 0 && r.mapY >= 0 
-					&& cub->map.map[r.mapY][r.mapX] > (t_tile)1)
-				r.hit = 1;
-		}
+		ray_loop(&r, cub);
 		// Remove delta distance to get to the side of the 'square' that is next to the wall
 		if (r.side == 0)
 		{

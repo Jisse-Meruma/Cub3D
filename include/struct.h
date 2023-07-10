@@ -67,6 +67,8 @@ typedef struct	s_raycast
 	float	deltaDistX;
 	float	deltaDistY;
 	float	perpWallDist;
+	double	wallX;
+	int		texX;
 	float	realWallDist;
 	int		stepX;
 	int		stepY;
@@ -81,6 +83,7 @@ typedef struct s_player
 	t_vec	c_plane;
 	float	move_speed;
 	float	turn_speed;
+	int		head_pitch;
 }	t_player;
 
 typedef struct s_cubed

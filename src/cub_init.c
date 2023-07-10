@@ -33,8 +33,9 @@ bool	player_init(t_cubed *cub)
 	cub->player.pos.x = cub->map.px;
 	cub->player.pos.y = cub->map.py;
 	cub->player.c_plane = vec_rotate(cub->player.dir, -90);
-	cub->player.move_speed = 10;
+	cub->player.move_speed = 5;
 	cub->player.turn_speed = 200;
+	cub->player.head_pitch = 0;
 	printf("init playerdirXY: %f, %f\ninit c_planeXY: %f, %f\n", cub->player.dir.x, cub->player.dir.y, cub->player.c_plane.x, cub->player.c_plane.y);
 	return (true);
 }
@@ -54,6 +55,7 @@ bool	cub_init(t_cubed *cub)
 		return (false);
 	cub->fov = 3.0;
 	cub->render_distance = 10;
+	cub->map.map[cub->map.py][cub->map.px] = FLOOR;
 	// draw_map(cub);
 	return (true);
 }

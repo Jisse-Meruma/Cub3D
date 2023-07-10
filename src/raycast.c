@@ -9,25 +9,35 @@ void	draw_wall_segment(uint32_t x, t_raycast r, t_cubed *cub, int side)
 {
 	int	lineHeight;
 	int	drawstart;
-	uint32_t	drawend;
+	int	drawend;
 	unsigned int	color;
 	float			color_falloff;
 
 	lineHeight = (cub->img->width / r.perpWallDist) / cub->fov;
-	drawstart = (-lineHeight / 2) + ((cub->img->height) / 2);
+	drawstart = (-lineHeight / 2) + ((cub->img->height) / 2 + (int)cub->player.head_pitch);
 	if (drawstart < 0)
 		drawstart = 0;
-	drawend = (lineHeight / 2) + ((cub->img->height) / 2);
-	if (drawend >= cub->img->height)
+	drawend = (lineHeight / 2) + ((cub->img->height) / 2) + (int)cub->player.head_pitch;
+	if (drawend >= (int)cub->img->height)
 		drawend = cub->img->height - 1;
 	if (r.perpWallDist / cub->render_distance < 1.0)
 		color_falloff = 1 / cos((r.perpWallDist / cub->render_distance) * (M_PI / 2));
 	else
 	 	color_falloff = 1 / cos(M_PI / 2);
-	color = 0x77777700 | (0x000000FF & (int)(255 / (color_falloff)));
-	if (side == 1)
-		color = 0x55555500 | (0x000000FF & (int)(255 / (color_falloff)));;
-	uint32_t y;
+	if (side == 0)
+	{
+		color = 0x77770000 | (0x000000FF & (int)(255 / (color_falloff)));
+		r.wallX = cub->player.pos.y + r.perpWallDist * r.raydirY; 
+	}
+	else
+	{
+		color = 0x55550000 | (0x000000FF & (int)(255 / (color_falloff)));
+		r.wallX = cub->player.pos.x + r.perpWallDist * r.raydirX;
+	}
+	r.wallX -= floor(r.wallX);
+	r.texX = (double)(255 * r.wallX); // Replace 255 with the width of the texture.	
+	color = color | ((0xFF & r.texX) << 8);
+	int y;
 	y = drawstart;
 	while (y <= drawend)
 	{
@@ -44,8 +54,8 @@ void	draw_wall_segment(uint32_t x, t_raycast r, t_cubed *cub, int side)
 //
 // 	if (r.side == 1)
 // 	{
-// 		Xcomponent = cub->player.pos.x + r.mapX + (cub->player.pos.x - (int)cub->player.pos.x) * r.deltaDistX;
-// 		Ycomponent =  cub->player.pos.y + r.mapY + (cub->player.pos.y - (int)cub->player.pos.y) * r.deltaDistY;
+// 		Xcomponent = cub->player.pos.x + r.mapX;
+// 		Ycomponent =  cub->player.pos.y + r.mapY;
 // 	}
 // 	else
 // 	{

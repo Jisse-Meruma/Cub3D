@@ -1,4 +1,6 @@
 #include <cub3d.h>
+#include <stdbool.h>
+#include <stdint.h>
 
 void	get_player_orientation(t_cubed *cub)
 {
@@ -40,6 +42,44 @@ bool	player_init(t_cubed *cub)
 	return (true);
 }
 
+void	draw_minimap_background(t_cubed *cub)
+{
+	uint32_t	y;
+	uint32_t	x;
+
+	y = 0;
+	while (y < cub->minimap_background->height)
+	{
+		x = 0;
+		while (x < cub->minimap_background->width)
+		{
+			mlx_put_pixel(cub->minimap_background, x, y, 0x55555577);
+			x++;
+		}
+		y++;
+	}
+}
+
+bool	minimap_init(t_cubed *cub)
+{
+	int	mini_scale;
+
+	if (WINDOW_WIDTH > WINDOW_HEIGHT)
+		mini_scale = WINDOW_WIDTH / 4;
+	else
+		mini_scale = WINDOW_HEIGHT / 4;
+	cub->minimap = mlx_new_image(cub->mlx, mini_scale, mini_scale);
+	if (!cub->minimap)
+		return (false);
+	cub->minimap_explored = mlx_new_image(cub->mlx, mini_scale, mini_scale);
+	if (!cub->minimap_explored)
+		return (false);
+	cub->minimap_background = mlx_new_image(cub->mlx, mini_scale, mini_scale);
+	if (!cub->minimap_background)
+		return (false);
+	draw_minimap_background(cub);
+	return (true);
+}
 
 bool	cub_init(t_cubed *cub)
 {
@@ -51,11 +91,21 @@ bool	cub_init(t_cubed *cub)
 	cub->img = mlx_new_image(cub->mlx, WINDOW_WIDTH, WINDOW_HEIGHT);
 	if (!cub->img)
 		return (false);
+	if (!minimap_init(cub))
+		return (false);
 	if (mlx_image_to_window(cub->mlx, cub->img, 0, 0) == -1)
 		return (false);
+	if (mlx_image_to_window(cub->mlx, cub->minimap, 0, 0) == -1)
+		return (false);
+	if (mlx_image_to_window(cub->mlx, cub->minimap_explored, 0, 0) == -1)
+		return (false);
+	if (mlx_image_to_window(cub->mlx, cub->minimap_background, 0, 0) == -1)
+		return (false);
+	cub->minimap->instances[0].z = 3;
+	cub->minimap_background->instances[0].z = 1;
+	cub->minimap_explored->instances[0].z = 2;
 	cub->fov = 3.0;
 	cub->render_distance = 10;
 	cub->map.map[cub->map.py][cub->map.px] = FLOOR;
-	// draw_map(cub);
 	return (true);
 }

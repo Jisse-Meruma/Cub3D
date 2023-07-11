@@ -68,6 +68,7 @@ typedef struct	s_raycast
 	float	deltaDistY;
 	float	perpWallDist;
 	double	wallX;
+	t_vec	hit_pos;
 	int		texX;
 	float	realWallDist;
 	int		stepX;
@@ -92,6 +93,9 @@ typedef struct s_cubed
 	t_map		map;
 	mlx_t		*mlx;
 	mlx_image_t	*img;
+	mlx_image_t	*minimap;
+	mlx_image_t	*minimap_explored;
+	mlx_image_t	*minimap_background;
 	float		fov;
 	float		render_distance;
 }	t_cubed;

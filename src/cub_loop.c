@@ -28,7 +28,7 @@ void	draw_map(t_cubed *cub)
 	int	x;
 	int	tile_scale;
 
-	tile_scale = 50;
+	tile_scale = 10;
 	y = 0;
 	while (y < cub->map.height)
 	{
@@ -152,14 +152,13 @@ void	cub_frame(void *param)
 	t_cubed	*cub;
 
 	cub = (t_cubed *)param;
-	 //draw_map(cub);
 	if (cub_update_image_scale(cub))
 		return ;
 	cub_controls(cub);
 	ft_bzero(cub->img->pixels, (cub->img->width * cub->img->height) * 4);
 	draw_floor_and_ceiling(cub);
 	raycast(cub);
-	// printf("1\n");
+	// draw_map(cub);
 }
 
 bool	cub_loop(t_cubed *cub)

@@ -8,7 +8,7 @@ void	get_player_orientation(t_cubed *cub)
 	if (cub->map.map[cub->map.py][cub->map.px] == PNORTH)
 	{
 		cub->player.dir.x = 0;
-		cub->player.dir.y = 1;
+		cub->player.dir.y = -1;
 	}
 	else if (cub->map.map[cub->map.py][cub->map.px] == PEAST)
 	{
@@ -18,7 +18,7 @@ void	get_player_orientation(t_cubed *cub)
 	else if (cub->map.map[cub->map.py][cub->map.px] == PSOUTH)
 	{
 		cub->player.dir.x = 0;
-		cub->player.dir.y = -1;
+		cub->player.dir.y = 1;
 	}
 	else if (cub->map.map[cub->map.py][cub->map.px] == PWEST)
 	{
@@ -34,7 +34,7 @@ bool	player_init(t_cubed *cub)
 	get_player_orientation(cub);
 	cub->player.pos.x = cub->map.px;
 	cub->player.pos.y = cub->map.py;
-	cub->player.c_plane = vec_rotate(cub->player.dir, -90);
+	cub->player.c_plane = vec_rotate(cub->player.dir, 90);
 	cub->player.move_speed = 5;
 	cub->player.turn_speed = 200;
 	cub->player.head_pitch = 0;
@@ -78,6 +78,10 @@ bool	minimap_init(t_cubed *cub)
 	if (!cub->minimap_background)
 		return (false);
 	draw_minimap_background(cub);
+	if (cub->map.width > cub->map.height)
+		cub->mini_ratio = (float)cub->minimap->width / (float)cub->map.width;	
+	else
+		cub->mini_ratio = (float)cub->minimap->height / (float)cub->map.height;
 	return (true);
 }
 

@@ -48,19 +48,12 @@ void	draw_wall_segment(uint32_t x, t_raycast r, t_cubed *cub, int side)
 
 void	draw_minimap(t_raycast r, t_cubed *cub)
 {
-	int	mini_scale;
-	float	mini_ratio;
-
-	mini_scale = cub->minimap->width;
-	if (cub->map.width > cub->map.height)
-		mini_ratio = (float)cub->minimap->width / (float)cub->map.width;	
-	else
-		mini_ratio = (float)cub->minimap->height / (float)cub->map.height;
-	if (r.perpWallDist < 3)
+	if (r.perpWallDist < cub->render_distance)
 	{
 		r.hit_pos.x = cub->player.pos.x + r.perpWallDist * r.raydirX;
 		r.hit_pos.y = cub->player.pos.y + r.perpWallDist * r.raydirY;
-		mlx_put_pixel(cub->minimap, (int)(r.hit_pos.x * mini_ratio), (int)(r.hit_pos.y * mini_ratio), 0xFFFFFFFF);
+		mlx_put_pixel(cub->minimap, (int)(r.hit_pos.x * cub->mini_ratio), (int)(r.hit_pos.y * cub->mini_ratio), 0xFFFFFFFF);
+		mlx_put_pixel(cub->minimap_explored, (int)(r.hit_pos.x * cub->mini_ratio), (int)(r.hit_pos.y * cub->mini_ratio), 0xAAAAAAFF);
 	}
 }
 
@@ -190,6 +183,8 @@ void	raycast(t_cubed *cub)
 	t_raycast	r;
 
 	x = 0;
+	ft_bzero(cub->minimap->pixels, sizeof(uint32_t) * cub->minimap->width * cub->minimap->height);
+	mlx_put_pixel(cub->minimap, (int)(cub->player.pos.x * cub->mini_ratio), (int)(cub->player.pos.y * cub->mini_ratio), 0xFF0000FF);
 	while (x < cub->img->width)
 	{
 		init_ray(x, &r, cub);

@@ -96,6 +96,7 @@ typedef struct s_cubed
 	mlx_image_t	*minimap;
 	mlx_image_t	*minimap_explored;
 	mlx_image_t	*minimap_background;
+	float		mini_ratio;
 	float		fov;
 	float		render_distance;
 }	t_cubed;

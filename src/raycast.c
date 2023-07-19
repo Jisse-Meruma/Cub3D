@@ -46,6 +46,21 @@ void	draw_wall_segment(uint32_t x, t_raycast r, t_cubed *cub, int side)
 	}
 }
 
+void	draw_line(t_cubed *cub, t_vec p1, t_vec p2)
+{
+	int	dx;
+	int	dy;
+	int	p;
+	int	x;
+	int	y;
+
+	dx = (int)(p2.x * cub->mini_ratio) - (int)(p1.x * cub->mini_ratio);
+	dy = (int)(p2.y * cub->mini_ratio) - (int)(p1.y * cub->mini_ratio);
+	x = (int)(p1.x * cub->mini_ratio);
+	y = (int)(p1.y * cub->mini_ratio);
+	p = 2 * dy - dx;
+}
+
 void	draw_minimap(t_raycast r, t_cubed *cub)
 {
 	if (r.perpWallDist < cub->render_distance)

@@ -5,6 +5,7 @@
 #include <stdint.h>
 
 // Get the relative position on the wall where the ray hit.
+
 float	get_wall_x(t_cubed *cub, t_raycast r, int side)
 {
 	float	wall_x;
@@ -27,6 +28,22 @@ int	get_texture_y(int picture_height, int lineheight, int counter)
 	step_size = (1.0 / (float)lineheight);
 	height = ((float)counter * step_size);
 	return ((float)picture_height * height);
+}
+
+u_int32_t get_color(t_texture *textures, int lineHeight, int counter, t_raycast r)
+{
+	int alpha;
+	int red;
+	int green;
+	int blue;
+	u_int32_t col;
+
+	alpha = textures->north_wall->pixels[((get_texture_y(textures->north_wall->height, lineHeight, counter)) * textures->north_wall->width + r.texX) * textures->north_wall->bytes_per_pixel + 3];
+	red = textures->north_wall->pixels[((get_texture_y(textures->north_wall->height, lineHeight, counter)) * textures->north_wall->width + r.texX) * textures->north_wall->bytes_per_pixel];
+	green = textures->north_wall->pixels[((get_texture_y(textures->north_wall->height, lineHeight, counter)) * textures->north_wall->width + r.texX) * textures->north_wall->bytes_per_pixel + 1];
+	blue = textures->north_wall->pixels[((get_texture_y(textures->north_wall->height, lineHeight, counter)) * textures->north_wall->width + r.texX) * textures->north_wall->bytes_per_pixel + 2];
+	col = get_rgba(red, green, blue, alpha);
+	return (col);
 }
 
 
@@ -66,8 +83,9 @@ void	draw_wall_segment(uint32_t x, t_raycast r, t_cubed *cub, int side)
 		if (y >= 0)
 		{
 			// printf("[%d]-%d-\n", get_texture_y(textures->north_wall->height, lineHeight, counter), counter);
-			mlx_put_pixel(cub->img, x, y, ((uint32_t *)textures->north_wall->pixels)[(get_texture_y(textures->north_wall->height, lineHeight, counter)) * textures->north_wall->width + r.texX]);
+			mlx_put_pixel(cub->img, x, y, get_color(textures, lineHeight, counter, r));
 		}
+		// printf("0x%x\n", ((uint32_t *)textures->north_wall->pixels)[(get_texture_y(textures->north_wall->height, lineHeight, counter)) * textures->north_wall->width + r.texX]);
 		counter++;
 		y++;
 	}

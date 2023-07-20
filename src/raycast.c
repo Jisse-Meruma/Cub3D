@@ -32,17 +32,15 @@ int	get_texture_y(int picture_height, int lineheight, int counter)
 
 u_int32_t get_color(t_texture *textures, int lineHeight, int counter, t_raycast r)
 {
-	int alpha;
 	int red;
 	int green;
 	int blue;
 	u_int32_t col;
 
-	alpha = textures->north_wall->pixels[((get_texture_y(textures->north_wall->height, lineHeight, counter)) * textures->north_wall->width + r.texX) * textures->north_wall->bytes_per_pixel + 3];
 	red = textures->north_wall->pixels[((get_texture_y(textures->north_wall->height, lineHeight, counter)) * textures->north_wall->width + r.texX) * textures->north_wall->bytes_per_pixel];
 	green = textures->north_wall->pixels[((get_texture_y(textures->north_wall->height, lineHeight, counter)) * textures->north_wall->width + r.texX) * textures->north_wall->bytes_per_pixel + 1];
 	blue = textures->north_wall->pixels[((get_texture_y(textures->north_wall->height, lineHeight, counter)) * textures->north_wall->width + r.texX) * textures->north_wall->bytes_per_pixel + 2];
-	col = get_rgba(red, green, blue, alpha);
+	col = get_rgba(red, green, blue, 0);
 	return (col);
 }
 
@@ -83,7 +81,7 @@ void	draw_wall_segment(uint32_t x, t_raycast r, t_cubed *cub, int side)
 		if (y >= 0)
 		{
 			// printf("[%d]-%d-\n", get_texture_y(textures->north_wall->height, lineHeight, counter), counter);
-			mlx_put_pixel(cub->img, x, y, get_color(textures, lineHeight, counter, r));
+			mlx_put_pixel(cub->img, x, y, get_color(textures, lineHeight, counter, r) | (0xFFFFFFFF & (int)(255 / (color_falloff))));
 		}
 		// printf("0x%x\n", ((uint32_t *)textures->north_wall->pixels)[(get_texture_y(textures->north_wall->height, lineHeight, counter)) * textures->north_wall->width + r.texX]);
 		counter++;

@@ -11,36 +11,82 @@ void	draw_wall_segment(uint32_t x, t_raycast r, t_cubed *cub, int side)
 {
 	int	lineHeight;
 	int	drawstart;
-	uint32_t	drawend;
+	int	drawend;
 	unsigned int	color;
 	float			color_falloff;
 
 	lineHeight = (cub->img->width / r.perpWallDist) / cub->fov;
-	drawstart = (-lineHeight / 2) + ((cub->img->height) / 2);
+	drawstart = (-lineHeight / 2) + ((cub->img->height) / 2 + (int)cub->player.head_pitch);
 	if (drawstart < 0)
 		drawstart = 0;
-	drawend = (lineHeight / 2) + ((cub->img->height) / 2);
-	if (drawend >= cub->img->height)
+	drawend = (lineHeight / 2) + ((cub->img->height) / 2) + (int)cub->player.head_pitch;
+	if (drawend >= (int)cub->img->height)
 		drawend = cub->img->height - 1;
 	if (r.perpWallDist / cub->render_distance < 1.0)
 		color_falloff = 1 / cos((r.perpWallDist / cub->render_distance) * (M_PI / 2));
 	else
 	 	color_falloff = 1 / cos(M_PI / 2);
-	color = 0xFF00FF00 | (0x000000FF & (int)(255 / (color_falloff)));
-	if (side == 1 && r.stepY == 1) 	// SOUTH
-		color = 0xFF00FF00 | (0x000000FF & (int)(255 / (color_falloff)));
-	if (side == 0 && r.stepX == 1) 	// EAST
-		color = 0xFF000000 | (0x000000FF & (int)(255 / (color_falloff)));
-	if (side == 1 && r.stepY == -1) // NORTH
-		color = 0x00FF0000 | (0x000000FF & (int)(255 / (color_falloff)));
-	if (side == 0 && r.stepX == -1) // WEST
-		color = 0x0000FF00 | (0x000000FF & (int)(255 / (color_falloff)));
-	uint32_t y;
+	if (side == 0)
+	{
+		color = 0x77770000 | (0x000000FF & (int)(255 / (color_falloff)));
+		r.wallX = cub->player.pos.y + r.perpWallDist * r.raydirY; 
+	}
+	else
+	{
+		color = 0x55550000 | (0x000000FF & (int)(255 / (color_falloff)));
+		r.wallX = cub->player.pos.x + r.perpWallDist * r.raydirX;
+	}
+	r.wallX -= floor(r.wallX);
+	r.texX = (double)(255 * r.wallX); // Replace 255 with the width of the texture.	
+	color = color | ((0xFF & r.texX) << 8);
+	int y;
 	y = drawstart;
 	while (y <= drawend)
 	{
 		mlx_put_pixel(cub->img, x, y, color);
 		y++;
+	}
+}
+
+void	draw_line(t_cubed *cub, t_vec p1, t_vec p2)
+{
+	int	dx;
+	int	dy;
+	int	p;
+	int	x;
+	int	y;
+
+	dx = (int)(p2.x * cub->mini_ratio) - (int)(p1.x * cub->mini_ratio);
+	dy = (int)(p2.y * cub->mini_ratio) - (int)(p1.y * cub->mini_ratio);
+	x = (int)(p1.x * cub->mini_ratio);
+	y = (int)(p1.y * cub->mini_ratio);
+	p = (2 * dy) - dx;
+
+	while (x < p2.x * cub->mini_ratio)
+	{
+		mlx_put_pixel(cub->minimap, x, y, 0xEEEEEEFF);
+		if (p >= 0)
+		{
+			y++;
+			p += (2 * dy) - (2 * dx);
+		}
+		else 
+		{
+			p += (2 * dy);
+		}
+		x++;
+	}
+}
+
+void	draw_minimap(t_raycast r, t_cubed *cub)
+{
+	if (r.perpWallDist < cub->render_distance)
+	{
+		r.hit_pos.x = cub->player.pos.x + r.perpWallDist * r.raydirX;
+		r.hit_pos.y = cub->player.pos.y + r.perpWallDist * r.raydirY;
+		mlx_put_pixel(cub->minimap, (int)(r.hit_pos.x * cub->mini_ratio), (int)(r.hit_pos.y * cub->mini_ratio), 0xFFFFFFFF);
+		mlx_put_pixel(cub->minimap_explored, (int)(r.hit_pos.x * cub->mini_ratio), (int)(r.hit_pos.y * cub->mini_ratio), 0xAAAAAAFF);
+		draw_line(cub, cub->player.pos, r.hit_pos);
 	}
 }
 
@@ -52,8 +98,8 @@ void	draw_wall_segment(uint32_t x, t_raycast r, t_cubed *cub, int side)
 //
 // 	if (r.side == 1)
 // 	{
-// 		Xcomponent = cub->player.pos.x + r.mapX + (cub->player.pos.x - (int)cub->player.pos.x) * r.deltaDistX;
-// 		Ycomponent =  cub->player.pos.y + r.mapY + (cub->player.pos.y - (int)cub->player.pos.y) * r.deltaDistY;
+// 		Xcomponent = cub->player.pos.x + r.mapX;
+// 		Ycomponent =  cub->player.pos.y + r.mapY;
 // 	}
 // 	else
 // 	{
@@ -170,6 +216,8 @@ void	raycast(t_cubed *cub)
 	t_raycast	r;
 
 	x = 0;
+	ft_bzero(cub->minimap->pixels, sizeof(uint32_t) * cub->minimap->width * cub->minimap->height);
+	mlx_put_pixel(cub->minimap, (int)(cub->player.pos.x * cub->mini_ratio), (int)(cub->player.pos.y * cub->mini_ratio), 0xFF0000FF);
 	while (x < cub->img->width)
 	{
 		init_ray(x, &r, cub);
@@ -187,6 +235,7 @@ void	raycast(t_cubed *cub)
 			// r.realWallDist = get_real_dist(cub, r);
 		}
 		draw_wall_segment(x, r, cub, r.side);
+		draw_minimap(r, cub);
 		x++;
 	}
 }

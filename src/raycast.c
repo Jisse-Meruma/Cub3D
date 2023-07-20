@@ -4,8 +4,21 @@
 #include <math.h>
 #include <stdint.h>
 
+// Get the relative position on the wall where the ray hit.
+float	get_wall_x(t_cubed *cub, t_raycast r, int side)
+{
+	float	wall_x;
 
-// side == 
+
+	if (side == 0)
+		wall_x = cub->player.pos.y + r.perpWallDist * r.raydirY; 
+	else
+		wall_x = cub->player.pos.x + r.perpWallDist * r.raydirX;
+	wall_x -= floor(r.wallX);
+	return (wall_x);
+}
+
+
 // function to draw a line of the wall.
 void	draw_wall_segment(uint32_t x, t_raycast r, t_cubed *cub, int side)
 {
@@ -17,33 +30,22 @@ void	draw_wall_segment(uint32_t x, t_raycast r, t_cubed *cub, int side)
 
 	lineHeight = (cub->img->width / r.perpWallDist) / cub->fov;
 	drawstart = (-lineHeight / 2) + ((cub->img->height) / 2 + (int)cub->player.head_pitch);
-	if (drawstart < 0)
-		drawstart = 0;
 	drawend = (lineHeight / 2) + ((cub->img->height) / 2) + (int)cub->player.head_pitch;
-	if (drawend >= (int)cub->img->height)
-		drawend = cub->img->height - 1;
 	if (r.perpWallDist / cub->render_distance < 1.0)
 		color_falloff = 1 / cos((r.perpWallDist / cub->render_distance) * (M_PI / 2));
 	else
 	 	color_falloff = 1 / cos(M_PI / 2);
-	if (side == 0)
-	{
-		color = 0x77770000 | (0x000000FF & (int)(255 / (color_falloff)));
-		r.wallX = cub->player.pos.y + r.perpWallDist * r.raydirY; 
-	}
-	else
-	{
-		color = 0x55550000 | (0x000000FF & (int)(255 / (color_falloff)));
-		r.wallX = cub->player.pos.x + r.perpWallDist * r.raydirX;
-	}
-	r.wallX -= floor(r.wallX);
+	r.wallX = get_wall_x(cub, r, side);
 	r.texX = (double)(255 * r.wallX); // Replace 255 with the width of the texture.	
-	color = color | ((0xFF & r.texX) << 8);
 	int y;
+	color = 0xFFFFFFFF;
 	y = drawstart;
 	while (y <= drawend)
 	{
-		mlx_put_pixel(cub->img, x, y, color);
+		if (y >= (int)cub->img->height)
+			break ;	
+		if (y >= 0)
+			mlx_put_pixel(cub->img, x, y, color);
 		y++;
 	}
 }

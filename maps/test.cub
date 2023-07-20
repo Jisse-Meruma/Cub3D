@@ -1,8 +1,8 @@
 
-NO          ./textures/pixil-frame-0.png
+NO    ./textures/fun_wall.png
 
 
-SO    ./textures/pixil-frame-0.png
+SO    ./textures/fun_wall.png
 
 WE  ./textures/pixil-frame-0.png
 

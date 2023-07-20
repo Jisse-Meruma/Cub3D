@@ -11,11 +11,22 @@ float	get_wall_x(t_cubed *cub, t_raycast r, int side)
 
 
 	if (side == 0)
-		wall_x = cub->player.pos.y + r.perpWallDist * r.raydirY; 
+		wall_x = cub->player.pos.y + r.perpWallDist * r.raydirY;
 	else
 		wall_x = cub->player.pos.x + r.perpWallDist * r.raydirX;
-	wall_x -= floor(r.wallX);
+	wall_x -= floor(wall_x);
 	return (wall_x);
+}
+
+int	get_texture_y(int picture_height, int lineheight, int counter)
+{
+	float 	step_size;
+	float	step_size_picture;
+	float	height;
+
+	step_size = (1.0 / (float)lineheight);
+	height = ((float)counter * step_size);
+	return ((float)picture_height * height);
 }
 
 
@@ -23,11 +34,16 @@ float	get_wall_x(t_cubed *cub, t_raycast r, int side)
 void	draw_wall_segment(uint32_t x, t_raycast r, t_cubed *cub, int side)
 {
 	int	lineHeight;
+	t_texture *textures;
+	int test;
 	int	drawstart;
 	int	drawend;
+	int counter;
 	unsigned int	color;
 	float			color_falloff;
 
+	counter = 0;
+	textures = &cub->map.elements.texture;
 	lineHeight = (cub->img->width / r.perpWallDist) / cub->fov;
 	drawstart = (-lineHeight / 2) + ((cub->img->height) / 2 + (int)cub->player.head_pitch);
 	drawend = (lineHeight / 2) + ((cub->img->height) / 2) + (int)cub->player.head_pitch;
@@ -36,16 +52,23 @@ void	draw_wall_segment(uint32_t x, t_raycast r, t_cubed *cub, int side)
 	else
 	 	color_falloff = 1 / cos(M_PI / 2);
 	r.wallX = get_wall_x(cub, r, side);
-	r.texX = (double)(255 * r.wallX); // Replace 255 with the width of the texture.	
+	r.texX = (double)(textures->north_wall->width * r.wallX); // Replace 255 with the width of the texture.
+
 	int y;
 	color = 0xFFFFFFFF;
 	y = drawstart;
-	while (y <= drawend)
+	test = drawstart;
+	
+	while (y < drawend)
 	{
 		if (y >= (int)cub->img->height)
 			break ;	
 		if (y >= 0)
-			mlx_put_pixel(cub->img, x, y, color);
+		{
+			// printf("[%d]-%d-\n", get_texture_y(textures->north_wall->height, lineHeight, counter), counter);
+			mlx_put_pixel(cub->img, x, y, ((uint32_t *)textures->north_wall->pixels)[(get_texture_y(textures->north_wall->height, lineHeight, counter)) * textures->north_wall->width + r.texX]);
+		}
+		counter++;
 		y++;
 	}
 }

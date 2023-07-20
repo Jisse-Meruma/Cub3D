@@ -27,12 +27,21 @@ typedef enum e_element
 	NO_VALUE,
 }	t_element;
 
+typedef struct s_texture
+{
+	mlx_texture_t *north_wall;
+	mlx_texture_t *south_wall;
+	mlx_texture_t *west_wall;
+	mlx_texture_t *east_wall;
+}	t_texture;
+
 typedef struct s_elements
 {
 	char		*north_texture_path;
 	char		*south_texture_path;
 	char		*west_texture_path;
 	char		*east_texture_path;
+	t_texture	texture;
 	uint32_t	col_floor;
 	uint32_t	col_ceiling;
 }	t_elements;

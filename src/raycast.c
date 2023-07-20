@@ -58,7 +58,22 @@ void	draw_line(t_cubed *cub, t_vec p1, t_vec p2)
 	dy = (int)(p2.y * cub->mini_ratio) - (int)(p1.y * cub->mini_ratio);
 	x = (int)(p1.x * cub->mini_ratio);
 	y = (int)(p1.y * cub->mini_ratio);
-	p = 2 * dy - dx;
+	p = (2 * dy) - dx;
+
+	while (x < p2.x * cub->mini_ratio)
+	{
+		mlx_put_pixel(cub->minimap, x, y, 0xEEEEEEFF);
+		if (p >= 0)
+		{
+			y++;
+			p += (2 * dy) - (2 * dx);
+		}
+		else 
+		{
+			p += (2 * dy);
+		}
+		x++;
+	}
 }
 
 void	draw_minimap(t_raycast r, t_cubed *cub)
@@ -69,6 +84,7 @@ void	draw_minimap(t_raycast r, t_cubed *cub)
 		r.hit_pos.y = cub->player.pos.y + r.perpWallDist * r.raydirY;
 		mlx_put_pixel(cub->minimap, (int)(r.hit_pos.x * cub->mini_ratio), (int)(r.hit_pos.y * cub->mini_ratio), 0xFFFFFFFF);
 		mlx_put_pixel(cub->minimap_explored, (int)(r.hit_pos.x * cub->mini_ratio), (int)(r.hit_pos.y * cub->mini_ratio), 0xAAAAAAFF);
+		draw_line(cub, cub->player.pos, r.hit_pos);
 	}
 }
 

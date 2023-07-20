@@ -4,6 +4,8 @@
 #include <math.h>
 #include <stdint.h>
 
+
+// side == 
 // function to draw a line of the wall.
 void	draw_wall_segment(uint32_t x, t_raycast r, t_cubed *cub, int side)
 {
@@ -24,9 +26,15 @@ void	draw_wall_segment(uint32_t x, t_raycast r, t_cubed *cub, int side)
 		color_falloff = 1 / cos((r.perpWallDist / cub->render_distance) * (M_PI / 2));
 	else
 	 	color_falloff = 1 / cos(M_PI / 2);
-	color = 0x77777700 | (0x000000FF & (int)(255 / (color_falloff)));
-	if (side == 1)
-		color = 0x55555500 | (0x000000FF & (int)(255 / (color_falloff)));;
+	color = 0xFF00FF00 | (0x000000FF & (int)(255 / (color_falloff)));
+	if (side == 1 && r.stepY == 1) 	// SOUTH
+		color = 0xFF00FF00 | (0x000000FF & (int)(255 / (color_falloff)));
+	if (side == 0 && r.stepX == 1) 	// EAST
+		color = 0xFF000000 | (0x000000FF & (int)(255 / (color_falloff)));
+	if (side == 1 && r.stepY == -1) // NORTH
+		color = 0x00FF0000 | (0x000000FF & (int)(255 / (color_falloff)));
+	if (side == 0 && r.stepX == -1) // WEST
+		color = 0x0000FF00 | (0x000000FF & (int)(255 / (color_falloff)));
 	uint32_t y;
 	y = drawstart;
 	while (y <= drawend)
@@ -136,7 +144,7 @@ void	ray_loop(t_raycast *r, t_cubed *cub)
 			}
 			if (r->mapX < cub->map.width && r->mapY < cub->map.height
 					&& r->mapX >= 0 && r->mapY >= 0 
-					&& cub->map.map[r->mapY][r->mapX] > (t_tile)1)
+					&& cub->map.map[r->mapY][r->mapX] > FLOOR)
 				r->hit = 1;
 		}
 }

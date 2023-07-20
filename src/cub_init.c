@@ -32,6 +32,7 @@ bool	player_init(t_cubed *cub)
 	get_player_orientation(cub);
 	cub->player.pos.x = cub->map.px;
 	cub->player.pos.y = cub->map.py;
+	cub->map.map[cub->map.py][cub->map.px] = FLOOR;
 	cub->player.c_plane = vec_rotate(cub->player.dir, -90);
 	cub->player.move_speed = 10;
 	cub->player.turn_speed = 200;

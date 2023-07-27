@@ -44,4 +44,8 @@ void	raycast(t_cubed *cub);
 // Cub3d cleanup
 bool	cub_end(t_cubed *cub);
 
+// Minimap
+void	draw_line(t_cubed *cub, t_vec p1, t_vec p2);
+void	draw_minimap(t_raycast r, t_cubed *cub);
+
 #endif

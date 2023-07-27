@@ -27,7 +27,8 @@ SRC 	:=	main.c \
 			cub_loop.c \
 			vec_rotate.c \
 			raycast.c \
-			cub_end.c
+			cub_end.c \
+			minimap.c
 
 OBJ		:=	$(patsubst %.c, $(OBJ_DIR)/%.o, $(SRC))
 SRC		:=	$(addprefix $(SRC_DIR)/,$(SRC))

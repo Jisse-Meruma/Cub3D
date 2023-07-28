@@ -103,6 +103,7 @@ typedef struct s_cubed
 	mlx_t		*mlx;
 	mlx_image_t	*img;
 	mlx_image_t	*minimap;
+	mlx_image_t	*minimap_view;
 	mlx_image_t	*minimap_explored;
 	mlx_image_t	*minimap_background;
 	float		mini_ratio;

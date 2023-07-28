@@ -121,6 +121,7 @@ bool	cub_update_image_scale(t_cubed *cub)
 		mlx_delete_image(cub->mlx, cub->img);
 		cub->img = mlx_new_image(cub->mlx, cub->mlx->width, cub->mlx->height);
 		mlx_image_to_window(cub->mlx, cub->img, 0, 0);
+		cub->img->instances[0].z = 0;
 		return (true);
 	}
 	return (false);

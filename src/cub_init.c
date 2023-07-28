@@ -54,7 +54,7 @@ void	draw_minimap_background(t_cubed *cub)
 		x = 0;
 		while (x < cub->minimap_background->width)
 		{
-			mlx_put_pixel(cub->minimap_background, x, y, 0x55555577);
+			mlx_put_pixel(cub->minimap_background, x, y, 0x555555DD);
 			x++;
 		}
 		y++;
@@ -71,6 +71,9 @@ bool	minimap_init(t_cubed *cub)
 		mini_scale = WINDOW_HEIGHT / 4;
 	cub->minimap = mlx_new_image(cub->mlx, mini_scale, mini_scale);
 	if (!cub->minimap)
+		return (false);
+	cub->minimap_view = mlx_new_image(cub->mlx, mini_scale, mini_scale);
+	if (!cub->minimap_view)
 		return (false);
 	cub->minimap_explored = mlx_new_image(cub->mlx, mini_scale, mini_scale);
 	if (!cub->minimap_explored)
@@ -102,11 +105,14 @@ bool	cub_init(t_cubed *cub)
 		return (false);
 	if (mlx_image_to_window(cub->mlx, cub->minimap, 0, 0) == -1)
 		return (false);
+	if (mlx_image_to_window(cub->mlx, cub->minimap_view, 0, 0) == -1)
+		return (false);
 	if (mlx_image_to_window(cub->mlx, cub->minimap_explored, 0, 0) == -1)
 		return (false);
 	if (mlx_image_to_window(cub->mlx, cub->minimap_background, 0, 0) == -1)
 		return (false);
 	cub->minimap->instances[0].z = 3;
+	cub->minimap_view->instances[0].z = 4;
 	cub->minimap_background->instances[0].z = 1;
 	cub->minimap_explored->instances[0].z = 2;
 	cub->fov = 3.0;

@@ -50,11 +50,9 @@ void	draw_wall_segment(uint32_t x, t_raycast r, t_cubed *cub, int side)
 {
 	int	lineHeight;
 	t_texture *textures;
-	int test;
 	int	drawstart;
 	int	drawend;
 	int counter;
-	unsigned int	color;
 	float			color_falloff;
 
 	counter = 0;
@@ -70,9 +68,7 @@ void	draw_wall_segment(uint32_t x, t_raycast r, t_cubed *cub, int side)
 	r.texX = (double)(textures->north_wall->width * r.wallX); // Replace 255 with the width of the texture.
 
 	int y;
-	color = 0xFFFFFFFF;
 	y = drawstart;
-	test = drawstart;
 	
 	while (y < drawend)
 	{
@@ -216,7 +212,8 @@ void	raycast(t_cubed *cub)
 
 	x = 0;
 	ft_bzero(cub->minimap->pixels, sizeof(uint32_t) * cub->minimap->width * cub->minimap->height);
-	mlx_put_pixel(cub->minimap, (int)(cub->player.pos.x * cub->mini_ratio), (int)(cub->player.pos.y * cub->mini_ratio), 0xFF0000FF);
+	ft_bzero(cub->minimap_view->pixels, sizeof(uint32_t) * cub->minimap->width * cub->minimap->height);
+	mlx_put_pixel(cub->minimap_view, (int)(cub->player.pos.x * cub->mini_ratio), (int)(cub->player.pos.y * cub->mini_ratio), 0xFFFFFFFF);
 	while (x < cub->img->width)
 	{
 		init_ray(x, &r, cub);
@@ -237,4 +234,5 @@ void	raycast(t_cubed *cub)
 		draw_minimap(r, cub);
 		x++;
 	}
+	draw_minimap_player(cub);
 }

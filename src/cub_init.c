@@ -3,8 +3,7 @@
 #include <stdint.h>
 
 void	get_player_orientation(t_cubed *cub)
-{
-	
+{	
 	if (cub->map.map[cub->map.py][cub->map.px] == PNORTH)
 	{
 		cub->player.dir.x = 0;
@@ -25,8 +24,6 @@ void	get_player_orientation(t_cubed *cub)
 		cub->player.dir.x = -1;
 		cub->player.dir.y = 0;
 	}
-	printf("init playerdirXY: %f, %f\ninit c_planeXY: %f, %f\n", cub->player.dir.x, cub->player.dir.y, cub->player.c_plane.x, cub->player.c_plane.y);
-
 }
 
 bool	player_init(t_cubed *cub)
@@ -39,7 +36,6 @@ bool	player_init(t_cubed *cub)
 	cub->player.move_speed = 5;
 	cub->player.turn_speed = 200;
 	cub->player.head_pitch = 0;
-	printf("init playerdirXY: %f, %f\ninit c_planeXY: %f, %f\n", cub->player.dir.x, cub->player.dir.y, cub->player.c_plane.x, cub->player.c_plane.y);
 	return (true);
 }
 
@@ -73,26 +69,21 @@ bool	minimap_init(t_cubed *cub)
 	cub->minimap_view = mlx_new_image(cub->mlx, mini_scale, mini_scale);
 	cub->minimap_explored = mlx_new_image(cub->mlx, mini_scale, mini_scale);
 	cub->minimap_background = mlx_new_image(cub->mlx, mini_scale, mini_scale);
-	if (!cub->minimap_background || !cub->minimap || !cub->minimap_view || !cub->minimap_explored)
+	if (!cub->minimap_background || !cub->minimap
+		|| !cub->minimap_view || !cub->minimap_explored)
 	{
 		mlx_delete_image(cub->mlx, cub->minimap);
 		mlx_delete_image(cub->mlx, cub->minimap_view);
 		mlx_delete_image(cub->mlx, cub->minimap_explored);
 		mlx_delete_image(cub->mlx, cub->minimap_background);
-		return (false);
+		return (printf("Error allocating minimap images\n"), false);
 	}
 	draw_minimap_background(cub);
 	if (cub->map.width > cub->map.height)
-		cub->mini_ratio = (float)cub->minimap->width / (float)cub->map.width;	
+		cub->mini_ratio = (float)cub->minimap->width / (float)cub->map.width;
 	else
 		cub->mini_ratio = (float)cub->minimap->height / (float)cub->map.height;
 	return (true);
-}
-
-bool	init_images(t_cubed *cub)
-{
-
-
 }
 
 bool	cub_init(t_cubed *cub)
@@ -107,15 +98,11 @@ bool	cub_init(t_cubed *cub)
 		return (false);
 	if (!minimap_init(cub))
 		return (false);
-	if (mlx_image_to_window(cub->mlx, cub->img, 0, 0) == -1)
-		return (false);
-	if (mlx_image_to_window(cub->mlx, cub->minimap, 0, 0) == -1)
-		return (false);
-	if (mlx_image_to_window(cub->mlx, cub->minimap_view, 0, 0) == -1)
-		return (false);
-	if (mlx_image_to_window(cub->mlx, cub->minimap_explored, 0, 0) == -1)
-		return (false);
-	if (mlx_image_to_window(cub->mlx, cub->minimap_background, 0, 0) == -1)
+	if (mlx_image_to_window(cub->mlx, cub->img, 0, 0) == -1
+		|| mlx_image_to_window(cub->mlx, cub->minimap, 0, 0) == -1
+		|| mlx_image_to_window(cub->mlx, cub->minimap_view, 0, 0) == -1
+		|| mlx_image_to_window(cub->mlx, cub->minimap_explored, 0, 0) == -1
+		|| mlx_image_to_window(cub->mlx, cub->minimap_background, 0, 0) == -1)
 		return (false);
 	cub->minimap->instances[0].z = 3;
 	cub->minimap_view->instances[0].z = 4;

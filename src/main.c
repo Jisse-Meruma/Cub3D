@@ -16,7 +16,10 @@ int main(int argc, char *argv[])
 		return (EXIT_FAILURE);
 	}
 	if (!cub_init(&cub))
+	{
+		printf("Initilization failed.\n");
 		return (false);
+	}
 	if (!cub_loop(&cub))
 		return (false);
 	if (!cub_end(&cub))

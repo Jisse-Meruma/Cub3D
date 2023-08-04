@@ -70,23 +70,29 @@ bool	minimap_init(t_cubed *cub)
 	else
 		mini_scale = WINDOW_HEIGHT / 4;
 	cub->minimap = mlx_new_image(cub->mlx, mini_scale, mini_scale);
-	if (!cub->minimap)
-		return (false);
 	cub->minimap_view = mlx_new_image(cub->mlx, mini_scale, mini_scale);
-	if (!cub->minimap_view)
-		return (false);
 	cub->minimap_explored = mlx_new_image(cub->mlx, mini_scale, mini_scale);
-	if (!cub->minimap_explored)
-		return (false);
 	cub->minimap_background = mlx_new_image(cub->mlx, mini_scale, mini_scale);
-	if (!cub->minimap_background)
+	if (!cub->minimap_background || !cub->minimap || !cub->minimap_view || !cub->minimap_explored)
+	{
+		mlx_delete_image(cub->mlx, cub->minimap);
+		mlx_delete_image(cub->mlx, cub->minimap_view);
+		mlx_delete_image(cub->mlx, cub->minimap_explored);
+		mlx_delete_image(cub->mlx, cub->minimap_background);
 		return (false);
+	}
 	draw_minimap_background(cub);
 	if (cub->map.width > cub->map.height)
 		cub->mini_ratio = (float)cub->minimap->width / (float)cub->map.width;	
 	else
 		cub->mini_ratio = (float)cub->minimap->height / (float)cub->map.height;
 	return (true);
+}
+
+bool	init_images(t_cubed *cub)
+{
+
+
 }
 
 bool	cub_init(t_cubed *cub)

@@ -1,10 +1,17 @@
 #include "struct.h"
 #include <cub3d.h>
+#include <stdlib.h>
+
+void exiting(void)
+{
+	system("leaks cub3d");
+}
 
 int main(int argc, char *argv[])
 {
 	t_cubed	cub;	
 
+	atexit(exiting);
 	if (argc != 2)
 	{
 		printf("Error invalid arguments: Usage: ./cub3d + ANOTHER ARGUMENT stoopid..\n");

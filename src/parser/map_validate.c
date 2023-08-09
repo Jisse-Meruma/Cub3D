@@ -5,7 +5,9 @@
 
 bool	map_extension_check(char *map_path)
 {
-	if (!map_path && ft_strlen(map_path) >= EXTENSION_LENGTH)
+	if (!map_path)
+		return (false);
+	if (ft_strlen(map_path) <= EXTENSION_LENGTH)
 		return (false);
 	if (ft_strncmp(map_path + ft_strlen(map_path) - EXTENSION_LENGTH, ".cub", 5))
 		return (false);
@@ -68,6 +70,7 @@ bool	flood_fill_validate(t_map *map, int y, int x)
 bool	validate_map(t_map *map)
 {
 	t_tile	p_tile;
+
 	if (map->px == -1)
 		return (false);
 	p_tile = map->map[map->py][map->px];

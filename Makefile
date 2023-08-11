@@ -118,7 +118,7 @@ clean_cc:
 debug:
 	@make DEBUG=1
 
-optimize:
+optimize: clean
 	@make OPTIMIZE=1
 
 .PHONY: clean all fclean re libmlx depclean rere cc clean_cc debug optimize

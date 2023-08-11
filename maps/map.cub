@@ -1,7 +1,7 @@
-NO ./textures/fun_wall.png
-SO ./textures/fun_wall.png
-WE ./textures/fun_wall.png
-EA ./textures/fun_wall.png
+NO ./textures/mees.png
+SO ./textures/dante.png
+WE ./textures/jisse3.png
+EA ./textures/duco2.png
 
 F 0,0,0
 C 0,255,255

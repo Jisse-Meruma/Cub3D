@@ -4,7 +4,17 @@
 #include <math.h>
 #include <stdint.h>
 
-// Get the relative position on the wall where the ray hit.
+mlx_texture_t	*get_texture(t_raycast *r, t_texture *textures)
+{
+	if (r->side == 1 && r->raydirY > 0)
+		return (textures->north_wall);
+	if (r->side == 0 && r->raydirX > 0)
+		return (textures->east_wall);
+	if (r->side == 1 && r->raydirY < 0)
+		return (textures->south_wall);
+	if (r->side == 0 && r->raydirX < 0)
+		return (textures->west_wall);
+}
 
 float	get_wall_x(t_cubed *cub, t_raycast r, int side)
 {
@@ -30,16 +40,16 @@ int	get_texture_y(int picture_height, int lineheight, int counter)
 	return ((float)picture_height * height);
 }
 
-u_int32_t get_color(t_texture *textures, int lineHeight, int counter, t_raycast r)
+u_int32_t get_color(mlx_texture_t *texture, int lineHeight, int counter, t_raycast r)
 {
 	int red;
 	int green;
 	int blue;
 	u_int32_t col;
 
-	red = textures->north_wall->pixels[((get_texture_y(textures->north_wall->height, lineHeight, counter)) * textures->north_wall->width + r.texX) * textures->north_wall->bytes_per_pixel];
-	green = textures->north_wall->pixels[((get_texture_y(textures->north_wall->height, lineHeight, counter)) * textures->north_wall->width + r.texX) * textures->north_wall->bytes_per_pixel + 1];
-	blue = textures->north_wall->pixels[((get_texture_y(textures->north_wall->height, lineHeight, counter)) * textures->north_wall->width + r.texX) * textures->north_wall->bytes_per_pixel + 2];
+	red = texture->pixels[((get_texture_y(texture->height, lineHeight, counter)) * texture->width + r.texX) * texture->bytes_per_pixel];
+	green = texture->pixels[((get_texture_y(texture->height, lineHeight, counter)) * texture->width + r.texX) * texture->bytes_per_pixel + 1];
+	blue = texture->pixels[((get_texture_y(texture->height, lineHeight, counter)) * texture->width + r.texX) * texture->bytes_per_pixel + 2];
 	col = get_rgba(red, green, blue, 0);
 	return (col);
 }
@@ -65,7 +75,7 @@ void	draw_wall_segment(uint32_t x, t_raycast r, t_cubed *cub, int side)
 	else
 	 	color_falloff = 1 / cos(M_PI / 2);
 	r.wallX = get_wall_x(cub, r, side);
-	r.texX = (double)(textures->north_wall->width * r.wallX); // Replace 255 with the width of the texture.
+	r.texX = (double)(get_texture(&r, textures)->width * r.wallX); // Replace 255 with the width of the texture.
 
 	int y;
 	y = drawstart;
@@ -77,7 +87,7 @@ void	draw_wall_segment(uint32_t x, t_raycast r, t_cubed *cub, int side)
 		if (y >= 0)
 		{
 			// printf("[%d]-%d-\n", get_texture_y(textures->north_wall->height, lineHeight, counter), counter);
-			mlx_put_pixel(cub->img, x, y, get_color(textures, lineHeight, counter, r) | (0xFFFFFFFF & (int)(255 / (color_falloff))));
+			mlx_put_pixel(cub->img, x, y, get_color(get_texture(&r, textures), lineHeight, counter, r) | (0xFFFFFFFF & (int)(255 / (color_falloff))));
 		}
 		// printf("0x%x\n", ((uint32_t *)textures->north_wall->pixels)[(get_texture_y(textures->north_wall->height, lineHeight, counter)) * textures->north_wall->width + r.texX]);
 		counter++;

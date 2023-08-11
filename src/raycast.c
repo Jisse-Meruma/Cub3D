@@ -16,12 +16,11 @@ mlx_texture_t	*get_texture(t_raycast *r, t_texture *textures)
 		return (textures->west_wall);
 }
 
-float	get_wall_x(t_cubed *cub, t_raycast r, int side)
+float	get_wall_x(t_cubed *cub, t_raycast r)
 {
 	float	wall_x;
 
-
-	if (side == 0)
+	if (r.side == 0)
 		wall_x = cub->player.pos.y + r.perpWallDist * r.raydirY;
 	else
 		wall_x = cub->player.pos.x + r.perpWallDist * r.raydirX;
@@ -32,7 +31,6 @@ float	get_wall_x(t_cubed *cub, t_raycast r, int side)
 int	get_texture_y(int picture_height, int lineheight, int counter)
 {
 	float 	step_size;
-	float	step_size_picture;
 	float	height;
 
 	step_size = (1.0 / (float)lineheight);
@@ -40,107 +38,86 @@ int	get_texture_y(int picture_height, int lineheight, int counter)
 	return ((float)picture_height * height);
 }
 
-u_int32_t get_color(mlx_texture_t *texture, int lineHeight, int counter, t_raycast r)
+// tex = texture, lh = lineHeight, c = counter.
+u_int32_t get_color(mlx_texture_t *tex, int lh, int c, t_raycast *r)
 {
 	int red;
 	int green;
 	int blue;
+	int	i;
 	u_int32_t col;
 
-	red = texture->pixels[((get_texture_y(texture->height, lineHeight, counter)) * texture->width + r.texX) * texture->bytes_per_pixel];
-	green = texture->pixels[((get_texture_y(texture->height, lineHeight, counter)) * texture->width + r.texX) * texture->bytes_per_pixel + 1];
-	blue = texture->pixels[((get_texture_y(texture->height, lineHeight, counter)) * texture->width + r.texX) * texture->bytes_per_pixel + 2];
+	i = get_texture_y(tex->height, lh, c) * tex->width + r->texX;
+	red = tex->pixels[i * tex->bytes_per_pixel];
+	green = tex->pixels[i * tex->bytes_per_pixel + 1];
+	blue = tex->pixels[i * tex->bytes_per_pixel + 2];
 	col = get_rgba(red, green, blue, 0);
 	return (col);
 }
 
-
 // function to draw a line of the wall.
-void	draw_wall_segment(uint32_t x, t_raycast r, t_cubed *cub, int side)
+// lh = lineHeight. dstart = drawstart. dend = drawend.
+// c = counter.
+void	draw_wall_segment(uint32_t x, t_raycast r, t_cubed *cub, mlx_texture_t *text)
 {
-	int	lineHeight;
-	t_texture *textures;
-	int	drawstart;
-	int	drawend;
-	int counter;
-	float			color_falloff;
+	int			lh;
+	int			dstart;
+	int			dend;
+	int			c;
+	float		color_falloff;
 
-	counter = 0;
-	textures = &cub->map.elements.texture;
-	lineHeight = (cub->img->width / r.perpWallDist) / cub->fov;
-	drawstart = (-lineHeight / 2) + ((cub->img->height) / 2 + (int)cub->player.head_pitch);
-	drawend = (lineHeight / 2) + ((cub->img->height) / 2) + (int)cub->player.head_pitch;
+	c = 0;
+	lh = (cub->img->width / r.perpWallDist) / cub->fov;
+	dstart = (-lh / 2) + ((cub->img->height) / 2 + (int)cub->player.head_pitch);
+	dend = (lh / 2) + ((cub->img->height) / 2) + (int)cub->player.head_pitch;
 	if (r.perpWallDist / cub->render_distance < 1.0)
 		color_falloff = 1 / cos((r.perpWallDist / cub->render_distance) * (M_PI / 2));
 	else
 	 	color_falloff = 1 / cos(M_PI / 2);
-	r.wallX = get_wall_x(cub, r, side);
-	r.texX = (double)(get_texture(&r, textures)->width * r.wallX); // Replace 255 with the width of the texture.
-
+	r.wallX = get_wall_x(cub, r);
+	r.texX = (double)(text->width * r.wallX);
 	int y;
-	y = drawstart;
-	
-	while (y < drawend)
+	y = dstart;
+	while (y < dend && y < (int)cub->img->height)
 	{
-		if (y >= (int)cub->img->height)
-			break ;	
 		if (y >= 0)
-		{
-			// printf("[%d]-%d-\n", get_texture_y(textures->north_wall->height, lineHeight, counter), counter);
-			mlx_put_pixel(cub->img, x, y, get_color(get_texture(&r, textures), lineHeight, counter, r) | (0xFFFFFFFF & (int)(255 / (color_falloff))));
-		}
-		// printf("0x%x\n", ((uint32_t *)textures->north_wall->pixels)[(get_texture_y(textures->north_wall->height, lineHeight, counter)) * textures->north_wall->width + r.texX]);
-		counter++;
+			mlx_put_pixel(cub->img, x, y,
+				get_color(text, lh, c, &r)
+				| (0xFFFFFFFF & (int)(255 / (color_falloff))));
+		c++;
 		y++;
 	}
 }
 
-// void	// float	get_real_dist(t_cubed *cub, t_raycast r)
-// {
-// 	float	realDist;
-// 	float	Xcomponent;
-// 	float	Ycomponent;
-//
-// 	if (r.side == 1)
-// 	{
-// 		Xcomponent = cub->player.pos.x + r.mapX;
-// 		Ycomponent =  cub->player.pos.y + r.mapY;
-// 	}
-// 	else
-// 	{
-// 		Ycomponent = (r.sideDistY - r.deltaDistY) * cub->player.dir.y;
-// 		Xcomponent = r.sideDistX * cub->player.dir.x;
-//
-// 	}
-// 	realDist = sqrt((Xcomponent * Xcomponent) + (Ycomponent * Ycomponent));
-// 	return (realDist);
-// }
+void	setup_wall_segment()
+{
 
+}
 
 /* determine the distance to the first x and first y side
    */
 void	init_step_and_side_dist(t_raycast *r, t_cubed *cub)
 {
-		if (r->raydirX < 0)
-		{
-			r->stepX = -1;
-			r->sideDistX = (cub->player.pos.x - r->mapX) * r->deltaDistX;
-		}
-		else
-		{
-			r->stepX = 1;
-			r->sideDistX = (r->mapX + 1.0 - cub->player.pos.x) * r->deltaDistX;
-		}
-		if (r->raydirY < 0)
-		{
-			r->stepY = -1;
-			r->sideDistY = (cub->player.pos.y - r->mapY) * r->deltaDistY;
-		}
-		else
-		{
-			r->stepY = 1;
-			r->sideDistY = (r->mapY + 1.0 - cub->player.pos.y) * r->deltaDistY;
-		}
+	if (r->raydirX < 0)
+	{
+		r->stepX = -1;
+		r->sideDistX = (cub->player.pos.x - r->mapX) * r->deltaDistX;
+	}
+	else
+	{
+		r->stepX = 1;
+		r->sideDistX = (r->mapX + 1.0 - cub->player.pos.x) * r->deltaDistX;
+	}
+	if (r->raydirY < 0)
+	{
+		r->stepY = -1;
+		r->sideDistY = (cub->player.pos.y - r->mapY) * r->deltaDistY;
+	}
+	else
+	{
+		r->stepY = 1;
+		r->sideDistY = (r->mapY + 1.0 - cub->player.pos.y) * r->deltaDistY;
+	}
 }
 
 
@@ -157,47 +134,47 @@ void	init_step_and_side_dist(t_raycast *r, t_cubed *cub)
 */
 void	init_ray(uint32_t x, t_raycast *r, t_cubed *cub)
 {
-		r->mapX = (int)cub->player.pos.x;
-		r->mapY = (int)cub->player.pos.y;
-		r->camx = cub->fov * ((float)x / cub->img->width) - (cub->fov / 2);
-		r->raydirX = cub->player.dir.x + (cub->player.c_plane.x) * r->camx;
-		r->raydirY = cub->player.dir.y + (cub->player.c_plane.y) * r->camx;
-		if (r->raydirX == 0)
-			r->deltaDistX = 1e30;
-		else
-			r->deltaDistX = fabs(1 / r->raydirX);
-		if (r->raydirY == 0)
-			r->deltaDistY = 1e30;
-		else
-			r->deltaDistY = fabs(1 / r->raydirY);
-		init_step_and_side_dist(r, cub);
-		r->hit = 0;
+	r->mapX = (int)cub->player.pos.x;
+	r->mapY = (int)cub->player.pos.y;
+	r->camx = cub->fov * ((float)x / cub->img->width) - (cub->fov / 2);
+	r->raydirX = cub->player.dir.x + (cub->player.c_plane.x) * r->camx;
+	r->raydirY = cub->player.dir.y + (cub->player.c_plane.y) * r->camx;
+	if (r->raydirX == 0)
+		r->deltaDistX = 1e30;
+	else
+		r->deltaDistX = fabs(1 / r->raydirX);
+	if (r->raydirY == 0)
+		r->deltaDistY = 1e30;
+	else
+		r->deltaDistY = fabs(1 / r->raydirY);
+	init_step_and_side_dist(r, cub);
+	r->hit = 0;
 }
 /* DDA loop
    here the actual steps are taken to see when a wall is hit.
 */
 void	ray_loop(t_raycast *r, t_cubed *cub)
 {
-		while (r->hit == 0)
+	while (r->hit == 0)
+	{
+		if (r->sideDistX < r->sideDistY)
 		{
-			// jump to next map square, either in x-direction, or in y-direction.
-			if (r->sideDistX < r->sideDistY)
-			{
-				r->sideDistX += r->deltaDistX;
-				r->mapX += r->stepX;
-				r->side = 0;
-			}
-			else
-			{
-				r->sideDistY += r->deltaDistY;
-				r->mapY += r->stepY;
-				r->side = 1;
-			}
-			if (r->mapX < cub->map.width && r->mapY < cub->map.height
-					&& r->mapX >= 0 && r->mapY >= 0 
-					&& cub->map.map[r->mapY][r->mapX] > FLOOR)
-				r->hit = 1;
+			r->sideDistX += r->deltaDistX;
+			r->mapX += r->stepX;
+			r->side = 0;
 		}
+		else
+		{
+			r->sideDistY += r->deltaDistY;
+			r->mapY += r->stepY;
+			r->side = 1;
+		}
+		if (r->mapX < cub->map.width
+				&& r->mapY < cub->map.height
+				&& r->mapX >= 0 && r->mapY >= 0 
+				&& cub->map.map[r->mapY][r->mapX] > FLOOR)
+			r->hit = 1;
+	}
 }
 
 /*
@@ -221,26 +198,22 @@ void	raycast(t_cubed *cub)
 	t_raycast	r;
 
 	x = 0;
-	ft_bzero(cub->minimap->pixels, sizeof(uint32_t) * cub->minimap->width * cub->minimap->height);
-	ft_bzero(cub->minimap_view->pixels, sizeof(uint32_t) * cub->minimap->width * cub->minimap->height);
-	mlx_put_pixel(cub->minimap_view, (int)(cub->player.pos.x * cub->mini_ratio), (int)(cub->player.pos.y * cub->mini_ratio), 0xFFFFFFFF);
+	ft_bzero(cub->minimap->pixels,
+		sizeof(uint32_t) * cub->minimap->width * cub->minimap->height);
+	ft_bzero(cub->minimap_view->pixels,
+		sizeof(uint32_t) * cub->minimap->width * cub->minimap->height);
+	mlx_put_pixel(cub->minimap_view,
+		(int)(cub->player.pos.x * cub->mini_ratio),
+		(int)(cub->player.pos.y * cub->mini_ratio), 0xFFFFFFFF);
 	while (x < cub->img->width)
 	{
 		init_ray(x, &r, cub);
-		// perform DDA
 		ray_loop(&r, cub);
-		// Remove delta distance to get to the side of the 'square' that is next to the wall
 		if (r.side == 0)
-		{
 			r.perpWallDist = (r.sideDistX - r.deltaDistX);
-			// r.realWallDist = get_real_dist(cub, r);
-		}
 		else
-		{
 			r.perpWallDist = (r.sideDistY - r.deltaDistY);
-			// r.realWallDist = get_real_dist(cub, r);
-		}
-		draw_wall_segment(x, r, cub, r.side);
+		draw_wall_segment(x, r, cub, get_texture(&r, &cub->map.elements.texture));
 		draw_minimap(r, cub);
 		x++;
 	}

@@ -12,36 +12,21 @@ void	print_map_str(t_map *map)
 	}
 }
 
-bool	parser(char *map_config, t_map *map)
+bool	parser(char *map_config, t_cubed *cub)
 {
 	int	file;
 
 	if (!map_extension_check(map_config))
-	{
-		printf("SOMETHING WENT WRONG WITH THE EXTENSION AAAAAA\n");
-		return (false);
-	}
+		return (error_exit("Invalid Map Extension]\n", cub), false);
 	if (!open_map(map_config, &file))
-	{
-		printf("SOMETHING WENT WRONG WITH THE OPENING AAAAAA\n");
+		return (error_exit("Cant Open Map\n", cub), false);
+	if (!read_map(file, &cub->map))
+		return (error_exit("Map Reading Allocation Failed\n", cub), false);
+	print_map_str(&cub->map);
+	parse_elements(&(cub->map.elements), cub->map.str_map);
+	if (!setup_map(cub))
 		return (false);
-	}
-	if (!read_map(file, map))
-	{
-		printf("SOMETHING WENT WRONG WITH READING AAAAAA\n");
+	if (!validate_map(cub))
 		return (false);
-	}
-	print_map_str(map);
-	parse_elements(&(map->elements), map->str_map);
-	if (!setup_map(map))
-	{
-		printf("SOMETHING WENT WRONG WITH MAP SETUP AAAAAA\n");
-		return (false);
-	}
-	if (!validate_map(map))
-	{
-		printf("INVALID MAP\n");
-		return (false);
-	}
 	return (true);
 }

@@ -141,7 +141,7 @@ bool	get_player_pos(t_map *map)
 	return (true);
 }
 
-bool	set_map_tiles(t_map *map)
+void	set_map_tiles(t_map *map)
 {
 	int	i;
 	int	j;
@@ -160,23 +160,20 @@ bool	set_map_tiles(t_map *map)
 		y++;
 		i++;
 	}
-	return (true);
 }
 
-bool	setup_map(t_map *map)
+bool	setup_map(t_cubed *cub)
 {
-	map->px = -1;
-	map->py = -1;
-	if (!determine_map_height(map))
-		return (printf("Failed to determine map height\n"), false);
-	if (!determine_map_width(map))
-		return (printf("Failed to determine map width\n"), false);
-	if (!allocate_map_tiles(map))
-		return (printf("Map tile allocation failed\n"), false);
-	if (!set_map_tiles(map))
-		return (printf("Failed to set map tiles... idk how\n"), false);
-	if (!get_player_pos(map))
-		return (printf("ERROR mulitple player positions\n"), false);
-	printf("width: %i, height: %i\n", map->width, map->height);
+	cub->map.px = -1;
+	cub->map.py = -1;
+	if (!determine_map_height(&cub->map))
+		return (error_exit("Failed to determine map height\n", cub), false);
+	if (!determine_map_width(&cub->map))
+		return (error_exit("Failed to determine map width\n", cub), false);
+	if (!allocate_map_tiles(&cub->map))
+		return (error_exit("Map tile allocation failed\n", cub), false);
+	set_map_tiles(&cub->map);
+	if (!get_player_pos(&cub->map))
+		return (error_exit("mulitple player positions\n", cub), false);
 	return (true);
 }

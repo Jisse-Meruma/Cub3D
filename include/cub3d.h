@@ -11,17 +11,18 @@
 # define WINDOW_HEIGHT 720
 
 // Parser functions
-bool	parser(char *map_config, t_map *map);
+bool	parser(char *map_config, t_cubed *cub);
 bool	map_extension_check(char *map_path);
 bool	open_map(char *map_path, int *fd);
 bool	read_map(int file, t_map *map);
-bool	setup_map(t_map *map);
-bool	validate_map(t_map *map);
-bool	set_map_tiles(t_map *map);
+bool	setup_map(t_cubed *cub);
+bool	validate_map(t_cubed *cub);
+void	set_map_tiles(t_map *map);
 
 void	parse_elements(t_elements *elements, char **str_map);
 
 uint32_t	get_rgba(int r, int g, int b, int a);
+void		error_exit(const char *str, t_cubed *cub);
 
 // Parser-Texture_Utils
 void north_parse(t_elements *texture, char *path);

@@ -14,6 +14,7 @@ mlx_texture_t	*get_texture(t_raycast *r, t_texture *textures)
 		return (textures->south_wall);
 	if (r->side == 0 && r->raydirX < 0)
 		return (textures->west_wall);
+	return (NULL);
 }
 
 float	get_wall_x(t_cubed *cub, t_raycast r)
@@ -30,29 +31,33 @@ float	get_wall_x(t_cubed *cub, t_raycast r)
 
 int	get_texture_y(int picture_height, int lineheight, int counter)
 {
-	float 	step_size;
-	float	height;
-
-	step_size = (1.0 / (float)lineheight);
-	height = ((float)counter * step_size);
-	return ((float)picture_height * height);
+	return (picture_height * ((float)counter / (float)lineheight));
 }
 
 // tex = texture, lh = lineHeight, c = counter.
-u_int32_t get_color(mlx_texture_t *tex, int lh, int c, t_raycast *r)
+u_int32_t get_color(mlx_texture_t *tex, int x, int y, int alpha)
 {
 	int red;
 	int green;
 	int blue;
 	int	i;
-	u_int32_t col;
 
-	i = get_texture_y(tex->height, lh, c) * tex->width + r->texX;
+	i = y * tex->width + x;
 	red = tex->pixels[i * tex->bytes_per_pixel];
 	green = tex->pixels[i * tex->bytes_per_pixel + 1];
 	blue = tex->pixels[i * tex->bytes_per_pixel + 2];
-	col = get_rgba(red, green, blue, 0);
-	return (col);
+	return (get_rgba(red, green, blue, alpha));
+}
+
+int	get_alpha(t_raycast *r, t_cubed *cub)
+{
+	float	color_falloff;
+	
+	if (r->perpWallDist / cub->render_distance < 1.0)
+		color_falloff = 1 / cos((r->perpWallDist / cub->render_distance) * (M_PI / 2));
+	else
+	 	color_falloff = 1 / cos(M_PI / 2);
+	return ((int)(255 / color_falloff));
 }
 
 // function to draw a line of the wall.
@@ -64,35 +69,30 @@ void	draw_wall_segment(uint32_t x, t_raycast r, t_cubed *cub, mlx_texture_t *tex
 	int			dstart;
 	int			dend;
 	int			c;
-	float		color_falloff;
+	int			y;
 
 	c = 0;
 	lh = (cub->img->width / r.perpWallDist) / cub->fov;
 	dstart = (-lh / 2) + ((cub->img->height) / 2 + (int)cub->player.head_pitch);
 	dend = (lh / 2) + ((cub->img->height) / 2) + (int)cub->player.head_pitch;
-	if (r.perpWallDist / cub->render_distance < 1.0)
-		color_falloff = 1 / cos((r.perpWallDist / cub->render_distance) * (M_PI / 2));
-	else
-	 	color_falloff = 1 / cos(M_PI / 2);
 	r.wallX = get_wall_x(cub, r);
 	r.texX = (double)(text->width * r.wallX);
-	int y;
 	y = dstart;
 	while (y < dend && y < (int)cub->img->height)
 	{
+		r.texY = get_texture_y(text->height, lh, c);
 		if (y >= 0)
 			mlx_put_pixel(cub->img, x, y,
-				get_color(text, lh, c, &r)
-				| (0xFFFFFFFF & (int)(255 / (color_falloff))));
+				get_color(text, r.texX, r.texY, get_alpha(&r, cub)));
 		c++;
 		y++;
 	}
 }
 
-void	setup_wall_segment()
-{
-
-}
+// void	setup_wall_segment()
+// {
+//
+// }
 
 /* determine the distance to the first x and first y side
    */
@@ -150,6 +150,7 @@ void	init_ray(uint32_t x, t_raycast *r, t_cubed *cub)
 	init_step_and_side_dist(r, cub);
 	r->hit = 0;
 }
+
 /* DDA loop
    here the actual steps are taken to see when a wall is hit.
 */

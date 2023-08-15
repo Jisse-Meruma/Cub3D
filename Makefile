@@ -59,7 +59,7 @@ ifdef DEBUG
 endif
 
 ifdef OPTIMIZE
-	CFLAGS += -Ofast
+	CFLAGS += -Ofast -flto
 endif
 
 ifeq ($(UNAME_S), Linux)

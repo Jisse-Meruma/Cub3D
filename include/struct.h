@@ -79,6 +79,7 @@ typedef struct	s_raycast
 	double	wallX;
 	t_vec	hit_pos;
 	int		texX;
+	int		texY;
 	float	realWallDist;
 	int		stepX;
 	int		stepY;

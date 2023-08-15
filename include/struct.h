@@ -1,6 +1,6 @@
 
-#ifndef SOOMANYSTRUCTS_H
-# define SOOMANYSTRUCTS_H
+#ifndef STRUCT_H
+# define STRUCT_H
 
 # include <MLX42.h>
 
@@ -29,10 +29,10 @@ typedef enum e_element
 
 typedef struct s_texture
 {
-	mlx_texture_t *north_wall;
-	mlx_texture_t *south_wall;
-	mlx_texture_t *west_wall;
-	mlx_texture_t *east_wall;
+	mlx_texture_t	*north_wall;
+	mlx_texture_t	*south_wall;
+	mlx_texture_t	*west_wall;
+	mlx_texture_t	*east_wall;
 }	t_texture;
 
 typedef struct s_elements
@@ -50,7 +50,7 @@ typedef struct s_vect
 {
 	float	x;
 	float	y;
-} t_vec;
+}	t_vec;
 
 typedef struct s_map
 {
@@ -60,29 +60,28 @@ typedef struct s_map
 	int			py;
 	int			height;
 	int			width;
-	t_elements 	elements;
+	t_elements	elements;
 
 }	t_map;
 
-typedef struct	s_raycast
+typedef struct s_raycast
 {
 	double	camx;
-	double	raydirX;
-	double	raydirY;
-	int		mapX;
-	int		mapY;
-	float	sideDistX;
-	float	sideDistY;
-	float	deltaDistX;
-	float	deltaDistY;
-	float	perpWallDist;
-	double	wallX;
+	double	raydirx;
+	double	raydiry;
+	int		mapx;
+	int		mapy;
+	float	sidedistx;
+	float	sidedisty;
+	float	deltadistx;
+	float	deltadisty;
+	float	perpwalldist;
+	double	wallx;
 	t_vec	hit_pos;
-	int		texX;
-	int		texY;
-	float	realWallDist;
-	int		stepX;
-	int		stepY;
+	int		texx;
+	int		texy;
+	int		stepx;
+	int		stepy;
 	int		hit;
 	int		side;
 }	t_raycast;
@@ -112,6 +111,6 @@ typedef struct s_cubed
 	float		render_distance;
 }	t_cubed;
 
-typedef void (*t_func) (t_elements *, char *);
+typedef void	(*t_func) (t_elements *, char *);
 
-#endif
+#endif // STRUCT_H

@@ -2,7 +2,7 @@
 
 void	print_map_str(t_map *map)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	while (map->str_map[i])

@@ -2,19 +2,20 @@
 #include <cub3d.h>
 #include <stdlib.h>
 
-void exiting(void)
+void	exiting(void)
 {
 	system("leaks cub3d");
 }
 
-int main(int argc, char *argv[])
+int	main(int argc, char *argv[])
 {
-	t_cubed	cub;	
+	t_cubed	cub;
 
 	atexit(exiting);
 	if (argc != 2)
 	{
-		printf("Error invalid arguments: Usage: ./cub3d + ANOTHER ARGUMENT stoopid..\n");
+		printf("Error invalid arguments: Usage:\
+ ./cub3d + ANOTHER ARGUMENT stoopid..\n");
 		return (EXIT_FAILURE);
 	}
 	if (!parser(argv[1], &cub.map))

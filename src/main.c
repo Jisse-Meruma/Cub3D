@@ -22,7 +22,8 @@ int	main(int argc, char *argv[])
 
 	ft_bzero(&cub, sizeof(t_cubed));
 	if (argc != 2)
-		return (error_exit("Invalid amount of arguments [2]\n", &cub), EXIT_FAILURE);
+		return (error_exit("Invalid amount of arguments [2]\n",
+				&cub), EXIT_FAILURE);
 	if (!parser(argv[1], &cub))
 		return (EXIT_FAILURE);
 	if (!cub_init(&cub))

@@ -26,7 +26,7 @@ void	get_player_orientation(t_cubed *cub)
 	}
 }
 
-bool	player_init(t_cubed *cub)
+void	player_init(t_cubed *cub)
 {
 	get_player_orientation(cub);
 	cub->player.pos.x = cub->map.px;
@@ -36,7 +36,6 @@ bool	player_init(t_cubed *cub)
 	cub->player.move_speed = 5;
 	cub->player.turn_speed = 200;
 	cub->player.head_pitch = 0;
-	return (true);
 }
 
 void	draw_minimap_background(t_cubed *cub)
@@ -76,7 +75,7 @@ bool	minimap_init(t_cubed *cub)
 		mlx_delete_image(cub->mlx, cub->minimap_view);
 		mlx_delete_image(cub->mlx, cub->minimap_explored);
 		mlx_delete_image(cub->mlx, cub->minimap_background);
-		return (printf("Error allocating minimap images\n"), false);
+		return (error_exit("allocating minimap images\n", cub), false);
 	}
 	draw_minimap_background(cub);
 	if (cub->map.width > cub->map.height)
@@ -88,14 +87,13 @@ bool	minimap_init(t_cubed *cub)
 
 bool	cub_init(t_cubed *cub)
 {
-	if (!player_init(cub))
-		return (false);
+	player_init(cub);
 	cub->mlx = mlx_init(WINDOW_WIDTH, WINDOW_HEIGHT, "Cub3d", 1);
 	if (cub->mlx == NULL)
-		return (false);
+		return (error_exit("Mlx init\n", cub), false);
 	cub->img = mlx_new_image(cub->mlx, WINDOW_WIDTH, WINDOW_HEIGHT);
 	if (!cub->img)
-		return (false);
+		return (error_exit("Img init\n", cub), false);
 	if (!minimap_init(cub))
 		return (false);
 	if (mlx_image_to_window(cub->mlx, cub->img, 0, 0) == -1
@@ -103,7 +101,7 @@ bool	cub_init(t_cubed *cub)
 		|| mlx_image_to_window(cub->mlx, cub->minimap_view, 0, 0) == -1
 		|| mlx_image_to_window(cub->mlx, cub->minimap_explored, 0, 0) == -1
 		|| mlx_image_to_window(cub->mlx, cub->minimap_background, 0, 0) == -1)
-		return (false);
+		return (error_exit("Image to window\n", cub), false);
 	cub->minimap->instances[0].z = 3;
 	cub->minimap_view->instances[0].z = 4;
 	cub->minimap_background->instances[0].z = 1;

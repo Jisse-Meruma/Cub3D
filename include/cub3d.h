@@ -22,6 +22,7 @@ bool			set_map_tiles(t_map *map);
 void			parse_elements(t_elements *elements, char **str_map);
 
 uint32_t		get_rgba(int r, int g, int b, int a);
+void			error_exit(const char *str, t_cubed *cub);
 
 // Parser-Texture_Utils
 void			north_parse(t_elements *texture, char *path);

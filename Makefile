@@ -123,4 +123,7 @@ debug:
 optimize: clean
 	@make OPTIMIZE=1
 
+mem:
+	memdetect $(SRC) $(LIBS) $(MLXLIB) $(HEADER) -a maps/map.cub -fail loop -fl -fsanitize=address
+
 .PHONY: clean all fclean re libmlx depclean rere cc clean_cc debug optimize

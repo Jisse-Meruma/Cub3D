@@ -98,7 +98,7 @@ void	cub_frame(void *param)
 bool	cub_loop(t_cubed *cub)
 {
 	if (!mlx_loop_hook(cub->mlx, cub_frame, (void *)cub))
-		return (false);
+		return (error_exit("Mlx Loop hook failed\n", cub), false);
 	mlx_loop(cub->mlx);
 	return (true);
 }

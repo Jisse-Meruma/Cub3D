@@ -29,6 +29,8 @@ bool	read_map(int file, t_map *map)
 	char	**temp;
 
 	line = get_next_line(file);
+	if (!line)
+		return (false);
 	str_map = ft_2d_add(NULL, line);
 	if (!str_map)
 		return (false);
@@ -67,16 +69,16 @@ bool	flood_fill_validate(t_map *map, int y, int x)
 	return (ret);
 }
 
-bool	validate_map(t_map *map)
+bool	validate_map(t_cubed *cub)
 {
 	t_tile	p_tile;
 
-	if (map->px == -1)
-		return (false);
-	p_tile = map->map[map->py][map->px];
-	if (!flood_fill_validate(map, map->py, map->px))
-		return (false);
-	set_map_tiles(map);
-	map->map[map->py][map->px] = p_tile;
+	if (cub->map.px == -1)
+		return (error_exit("No Player Location\n", cub), false);
+	p_tile = cub->map.map[cub->map.py][cub->map.px];
+	if (!flood_fill_validate(&cub->map, cub->map.py, cub->map.px))
+		return (error_exit("No Valid Path\n", cub), false);
+	set_map_tiles(&cub->map);
+	cub->map.map[cub->map.py][cub->map.px] = p_tile;
 	return (true);
 }

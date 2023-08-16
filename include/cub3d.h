@@ -19,6 +19,13 @@ bool			setup_map(t_cubed *cub);
 bool			validate_map(t_cubed *cub);
 void			set_map_tiles(t_map *map);
 
+// Parser setup map
+bool			valid_map_char(char c);
+bool			valid_map_str(char *str);
+int				map_start_index(char **map);
+bool			determine_map_height(t_map *map);
+bool			determine_map_width(t_map *map);
+
 void			parse_elements(t_elements *elements, char **str_map);
 
 uint32_t		get_rgba(int r, int g, int b, int a);
@@ -45,6 +52,9 @@ void			raycast(t_cubed *cub);
 
 // Cub3d cleanup
 bool			cub_end(t_cubed *cub);
+
+// Movement
+t_vec			get_move_vec(t_cubed *cub);
 
 // Render
 void			draw_wall_segment(uint32_t x, t_raycast r,

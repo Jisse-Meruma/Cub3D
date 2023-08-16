@@ -19,7 +19,7 @@ t_element	string_to_element(char *str)
 
 t_func	select_element(t_element element)
 {
-	const t_func functions[7] = {
+	const t_func	functions[7] = {
 	[WEST] = west_parse,
 	[EAST] = east_parse,
 	[NORTH] = north_parse,
@@ -34,8 +34,8 @@ t_func	select_element(t_element element)
 void	parse_elements(t_elements *elements, char **str_map)
 {
 	char			**arr;
-	size_t 			index;
-	t_func 			function;
+	size_t			index;
+	t_func			function;
 	t_element		element;
 
 	index = 0;

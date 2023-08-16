@@ -2,8 +2,6 @@
 #include <cub3d.h>
 #include <stdlib.h>
 
-
-
 void	error_exit(const char *str, t_cubed *cub)
 {
 	write(2, "Error\n", 6);

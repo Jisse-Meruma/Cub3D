@@ -23,11 +23,13 @@ SRC 	:=	main.c \
 			parser/elements_utils.c	\
 			parser/elements_utils2.c\
 			parser/setup_map.c \
+			parser/setup_map_utils.c \
 			cub_init.c \
 			cub_loop.c \
 			vec_rotate.c \
 			cub_end.c \
 			cub_controls.c \
+			get_move_vec.c \
 			render/minimap.c \
 			render/raycast.c \
 			render/wall_segment.c \

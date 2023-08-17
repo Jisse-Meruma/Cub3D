@@ -111,6 +111,6 @@ typedef struct s_cubed
 	float		render_distance;
 }	t_cubed;
 
-typedef void	(*t_func) (t_elements *, char *);
+typedef bool	(*t_func) (t_elements *, char *);
 
 #endif // STRUCT_H

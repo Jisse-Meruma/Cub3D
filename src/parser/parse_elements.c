@@ -31,7 +31,7 @@ t_func	select_element(t_element element)
 	return (functions[element]);
 }
 
-void	parse_elements(t_elements *elements, char **str_map)
+bool	parse_elements(t_elements *elements, char **str_map)
 {
 	char			**arr;
 	size_t			index;
@@ -41,16 +41,19 @@ void	parse_elements(t_elements *elements, char **str_map)
 	index = 0;
 	while (str_map[index] != NULL)
 	{
+
 		arr = ft_split(str_map[index], ' ');
 		if (!arr)
-			return ;
+			return (false);
 		element = string_to_element(arr[0]);
 		if (element != NO_VALUE)
 		{
 			function = select_element(element);
-			function(elements, arr[1]);
+			if(!function(elements, arr[1]))
+				return (ft_2dfree(arr), false);
 		}
 		ft_2dfree(arr);
 		index++;
 	}
+	return (true);
 }

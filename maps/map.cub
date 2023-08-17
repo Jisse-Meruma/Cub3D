@@ -1,7 +1,7 @@
-NO ./textures/mees.png
+NO ./textures/duco2.png
 SO ./textures/dante.png
 WE ./textures/jisse3.png
-EA ./textures/duco2.png
+EA ./textures/mees.png
 
 F 0,0,0
 C 0,255,255

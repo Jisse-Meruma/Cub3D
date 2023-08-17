@@ -26,18 +26,18 @@ int				map_start_index(char **map);
 bool			determine_map_height(t_map *map);
 bool			determine_map_width(t_map *map);
 
-void			parse_elements(t_elements *elements, char **str_map);
+bool			parse_elements(t_elements *elements, char **str_map);
 
 uint32_t		get_rgba(int r, int g, int b, int a);
 void			error_exit(const char *str, t_cubed *cub);
 
 // Parser-Texture_Utils
-void			north_parse(t_elements *texture, char *path);
-void			south_parse(t_elements *texture, char *path);
-void			east_parse(t_elements *texture, char *path);
-void			west_parse(t_elements *texture, char *path);
-void			ceiling_parse(t_elements *element, char *path);
-void			floor_parse(t_elements *element, char *path);
+bool			north_parse(t_elements *texture, char *path);
+bool			south_parse(t_elements *texture, char *path);
+bool			east_parse(t_elements *texture, char *path);
+bool			west_parse(t_elements *texture, char *path);
+bool			ceiling_parse(t_elements *element, char *path);
+bool			floor_parse(t_elements *element, char *path);
 
 // Cub3d initilization
 bool			cub_init(t_cubed *cub);

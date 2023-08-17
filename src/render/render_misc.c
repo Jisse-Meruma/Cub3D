@@ -6,11 +6,11 @@ mlx_texture_t	*get_texture(t_raycast *r, t_texture *textures)
 	if (r->side == 1 && r->raydiry > 0)
 		return (textures->north_wall);
 	if (r->side == 0 && r->raydirx > 0)
-		return (textures->east_wall);
+		return (textures->west_wall);
 	if (r->side == 1 && r->raydiry < 0)
 		return (textures->south_wall);
 	if (r->side == 0 && r->raydirx < 0)
-		return (textures->west_wall);
+		return (textures->east_wall);
 	return (NULL);
 }
 

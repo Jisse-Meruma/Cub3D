@@ -34,7 +34,7 @@ bool	read_map(int file, t_map *map)
 		return (false);
 	str_map = ft_2d_add(NULL, line);
 	if (!str_map)
-		return (false);
+		return (free(line), false);
 	while (line)
 	{
 		free(line);

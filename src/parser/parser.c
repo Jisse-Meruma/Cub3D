@@ -1,17 +1,5 @@
 #include <cub3d.h>
 
-void	print_map_str(t_map *map)
-{
-	int	i;
-
-	i = 0;
-	while (map->str_map[i])
-	{
-		printf("%s", map->str_map[i]);
-		i++;
-	}
-}
-
 bool	parser(char *map_config, t_cubed *cub)
 {
 	int	file;
@@ -22,8 +10,8 @@ bool	parser(char *map_config, t_cubed *cub)
 		return (error_exit("Cant Open Map\n", cub), false);
 	if (!read_map(file, &cub->map))
 		return (error_exit("Map Reading Allocation Failed\n", cub), false);
-	print_map_str(&cub->map);
-	parse_elements(&(cub->map.elements), cub->map.str_map);
+	if (!parse_elements(&(cub->map.elements), cub->map.str_map))
+		return (error_exit("Parse Elements Allocation Failed\n", cub), false);
 	if (!setup_map(cub))
 		return (false);
 	if (!validate_map(cub))

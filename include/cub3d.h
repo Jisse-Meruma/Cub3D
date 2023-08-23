@@ -18,6 +18,7 @@ bool			read_map(int file, t_map *map);
 bool			setup_map(t_cubed *cub);
 bool			validate_map(t_cubed *cub);
 void			set_map_tiles(t_map *map);
+bool			check_element_order(char **str_map);
 
 // Parser setup map
 bool			valid_map_char(char c);
@@ -55,11 +56,13 @@ bool			cub_end(t_cubed *cub);
 
 // Movement
 t_vec			get_move_vec(t_cubed *cub);
+void			update_mouse(double xdelta, double ydelta, void *param);
 
 // Render
 void			draw_wall_segment(uint32_t x, t_raycast r,
 					t_cubed *cub, mlx_texture_t *text);
 mlx_texture_t	*get_texture(t_raycast *r, t_texture *textures);
+void			draw_floor_and_ceiling(t_cubed *cub);
 
 // Minimap
 void			draw_line(mlx_image_t *img,

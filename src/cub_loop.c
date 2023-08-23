@@ -61,27 +61,6 @@ bool	cub_update_image_scale(t_cubed *cub)
 	return (false);
 }
 
-void	draw_floor_and_ceiling(t_cubed *cub)
-{
-	uint32_t	x;
-	uint32_t	y;
-
-	y = 0;
-	while (y < cub->img->height)
-	{
-		x = 0;
-		while (x < cub->img->width)
-		{
-			if (y < cub->img->height / 2 + cub->player.head_pitch)
-				mlx_put_pixel(cub->img, x, y, cub->map.elements.col_ceiling);
-			else
-				mlx_put_pixel(cub->img, x, y, cub->map.elements.col_floor);
-			x++;
-		}
-		y++;
-	}
-}
-
 void	cub_frame(void *param)
 {
 	t_cubed	*cub;
@@ -99,6 +78,7 @@ bool	cub_loop(t_cubed *cub)
 {
 	if (!mlx_loop_hook(cub->mlx, cub_frame, (void *)cub))
 		return (error_exit("Mlx Loop hook failed\n", cub), false);
+	mlx_cursor_hook(cub->mlx, update_mouse, (void *)cub);
 	mlx_loop(cub->mlx);
 	return (true);
 }

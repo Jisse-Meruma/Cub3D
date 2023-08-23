@@ -41,7 +41,6 @@ bool	parse_elements(t_elements *elements, char **str_map)
 	index = 0;
 	while (str_map[index] != NULL)
 	{
-
 		arr = ft_split(str_map[index], ' ');
 		if (!arr)
 			return (false);
@@ -49,11 +48,27 @@ bool	parse_elements(t_elements *elements, char **str_map)
 		if (element != NO_VALUE)
 		{
 			function = select_element(element);
-			if(!function(elements, arr[1]))
+			if (!function(elements, arr[1]))
 				return (ft_2dfree(arr), false);
 		}
 		ft_2dfree(arr);
 		index++;
+	}
+	return (true);
+}
+
+bool	check_element_order(char **str_map)
+{
+	size_t	i;
+
+	i = map_start_index(str_map);
+	while (str_map[i] && valid_map_str(str_map[i]))
+		i++;
+	while (str_map[i])
+	{
+		if (str_map[i][0] != '\n')
+			return (false);
+		i++;
 	}
 	return (true);
 }

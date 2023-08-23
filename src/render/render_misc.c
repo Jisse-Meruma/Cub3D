@@ -1,6 +1,27 @@
 #include <cub3d.h>
 #include <math.h>
 
+void	draw_floor_and_ceiling(t_cubed *cub)
+{
+	int	x;
+	int	y;
+
+	y = 0;
+	while (y < (int)cub->img->height)
+	{
+		x = 0;
+		while (x < (int)cub->img->width)
+		{
+			if (y < (int)(cub->img->height / 2 + cub->player.head_pitch))
+				mlx_put_pixel(cub->img, x, y, cub->map.elements.col_ceiling);
+			else
+				mlx_put_pixel(cub->img, x, y, cub->map.elements.col_floor);
+			x++;
+		}
+		y++;
+	}
+}
+
 mlx_texture_t	*get_texture(t_raycast *r, t_texture *textures)
 {
 	if (r->side == 1 && r->raydiry > 0)

@@ -109,6 +109,8 @@ typedef struct s_cubed
 	float		mini_ratio;
 	float		fov;
 	float		render_distance;
+	double		prev_mousey;
+	double		prev_mousex;
 }	t_cubed;
 
 typedef bool	(*t_func) (t_elements *, char *);

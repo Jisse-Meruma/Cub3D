@@ -57,19 +57,19 @@ bool	flood_fill_validate(t_map *map, int y, int x)
 
 	ret = true;
 	if (x == 0 || y == 0 || x == map->width - 1
-		|| y == map->height - 1 || map->map[y][x] == SPACE)
+		|| y == map->height - 1 || map->tiles[y][x] == SPACE)
 		return (false);
-	map->map[y][x] = TEMP;
-	if (x > 0 && map->map[y][x - 1] != WALL && map->map[y][x - 1] != TEMP)
+	map->tiles[y][x] = TEMP;
+	if (x > 0 && map->tiles[y][x - 1] != WALL && map->tiles[y][x - 1] != TEMP)
 		ret = flood_fill_validate(map, y, x - 1);
-	if (ret && x < map->width && map->map[y][x + 1] != WALL
-			&& map->map[y][x + 1] != TEMP)
+	if (ret && x < map->width && map->tiles[y][x + 1] != WALL
+			&& map->tiles[y][x + 1] != TEMP)
 		ret = flood_fill_validate(map, y, x + 1);
-	if (ret && y > 0 && map->map[y - 1][x] != WALL
-			&& map->map[y - 1][x] != TEMP)
+	if (ret && y > 0 && map->tiles[y - 1][x] != WALL
+			&& map->tiles[y - 1][x] != TEMP)
 		ret = flood_fill_validate(map, y - 1, x);
-	if (ret && y < map->height && map->map[y + 1][x] != WALL
-			&& map->map[y + 1][x] != TEMP)
+	if (ret && y < map->height && map->tiles[y + 1][x] != WALL
+			&& map->tiles[y + 1][x] != TEMP)
 		ret = flood_fill_validate(map, y + 1, x);
 	return (ret);
 }
@@ -80,10 +80,10 @@ bool	validate_map(t_cubed *cub)
 
 	if (cub->map.px == -1)
 		return (error_exit("No Player Location\n", cub), false);
-	p_tile = cub->map.map[cub->map.py][cub->map.px];
+	p_tile = cub->map.tiles[cub->map.py][cub->map.px];
 	if (!flood_fill_validate(&cub->map, cub->map.py, cub->map.px))
 		return (error_exit("No Valid Path\n", cub), false);
 	set_map_tiles(&cub->map);
-	cub->map.map[cub->map.py][cub->map.px] = p_tile;
+	cub->map.tiles[cub->map.py][cub->map.px] = p_tile;
 	return (true);
 }

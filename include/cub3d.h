@@ -7,8 +7,8 @@
 # include <fcntl.h>
 # include <stdio.h>
 
-# define WINDOW_WIDTH 720
-# define WINDOW_HEIGHT 720
+# define WINDOW_WIDTH 900
+# define WINDOW_HEIGHT 900
 
 // Parser functions
 bool			parser(char *map_config, t_cubed *cub);
@@ -49,7 +49,7 @@ void			cub_controls(t_cubed *cub);
 
 // Cub3d functions
 t_vec			vec_rotate(t_vec vec, float angle);
-void			raycast(t_cubed *cub);
+
 
 // Cub3d cleanup
 bool			cub_end(t_cubed *cub);
@@ -59,15 +59,21 @@ t_vec			get_move_vec(t_cubed *cub);
 void			update_mouse(double xdelta, double ydelta, void *param);
 
 // Render
-void			draw_wall_segment(uint32_t x, t_raycast r,
+void			draw_wall_segment(uint32_t x, t_raycast_info r,
 					t_cubed *cub, mlx_texture_t *text);
-mlx_texture_t	*get_texture(t_raycast *r, t_texture *textures);
+mlx_texture_t	*get_texture(t_raycast_info *r, t_texture *textures);
 void			draw_floor_and_ceiling(t_cubed *cub);
+void			render_frame(t_cubed *cub);
+t_raycast_info	raycast(t_vec pos, t_vec dir, t_map map);
+
+// Raycast utils
+void			set_distance(t_raycast *r);
+void			set_hit_position(t_raycast *r, t_vec pos, t_vec raydir);
 
 // Minimap
 void			draw_line(mlx_image_t *img,
 					t_vec p1, t_vec p2, unsigned int color);
-void			draw_minimap(t_raycast r, t_cubed *cub);
+void			draw_minimap(t_raycast_info r, t_cubed *cub);
 void			draw_minimap_player(t_cubed *cub);
 
 #endif

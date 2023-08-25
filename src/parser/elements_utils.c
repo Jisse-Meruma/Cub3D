@@ -10,7 +10,6 @@ bool	north_parse(t_elements *texture, char *path)
 	if (!texture->texture.north_wall)
 		return (false);
 	return (true);
-
 }
 
 bool	south_parse(t_elements *texture, char *path)
@@ -23,7 +22,6 @@ bool	south_parse(t_elements *texture, char *path)
 	if (!texture->texture.south_wall)
 		return (false);
 	return (true);
-
 }
 
 bool	east_parse(t_elements *texture, char *path)
@@ -36,7 +34,6 @@ bool	east_parse(t_elements *texture, char *path)
 	if (!texture->texture.east_wall)
 		return (false);
 	return (true);
-
 }
 
 bool	west_parse(t_elements *texture, char *path)
@@ -49,5 +46,4 @@ bool	west_parse(t_elements *texture, char *path)
 	if (!texture->texture.west_wall)
 		return (false);
 	return (true);
-
 }

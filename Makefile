@@ -32,8 +32,10 @@ SRC 	:=	main.c \
 			get_move_vec.c \
 			render/minimap.c \
 			render/raycast.c \
+			render/raycast_utils.c \
 			render/wall_segment.c \
-			render/render_misc.c
+			render/render_misc.c \
+			render/render.c
 
 OBJ		:=	$(patsubst %.c, $(OBJ_DIR)/%.o, $(SRC))
 SRC		:=	$(addprefix $(SRC_DIR)/,$(SRC))

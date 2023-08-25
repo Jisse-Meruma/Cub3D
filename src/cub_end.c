@@ -30,6 +30,6 @@ bool	cub_end(t_cubed *cub)
 	if (cub->map.elements.texture.south_wall != NULL)
 		mlx_delete_texture(cub->map.elements.texture.south_wall);
 	ft_2dfree(cub->map.str_map);
-	ft_2dfree((char **)cub->map.map);
+	ft_2dfree((char **)cub->map.tiles);
 	return (true);
 }

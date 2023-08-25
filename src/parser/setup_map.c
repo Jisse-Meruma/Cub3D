@@ -7,15 +7,15 @@ bool	allocate_map_tiles(t_map *map)
 	int	i;
 
 	i = 0;
-	map->map = ft_calloc(map->height + 1, sizeof(t_tile *));
-	if (map->map == NULL)
+	map->tiles = ft_calloc(map->height + 1, sizeof(t_tile *));
+	if (map->tiles == NULL)
 		return (false);
 	while (i < map->height)
 	{
-		map->map[i] = ft_calloc(map->width + 1, sizeof(t_tile));
-		if ((map->map)[i] == NULL)
+		map->tiles[i] = ft_calloc(map->width + 1, sizeof(t_tile));
+		if ((map->tiles)[i] == NULL)
 		{
-			ft_2dfree((char **)map->map);
+			ft_2dfree((char **)map->tiles);
 			return (false);
 		}
 		i++;
@@ -53,8 +53,8 @@ bool	get_player_pos(t_map *map)
 		x = 0;
 		while (x < map->width)
 		{
-			if (map->map[y][x] == PNORTH || map->map[y][x] == PEAST
-					|| map->map[y][x] == PSOUTH || map->map[y][x] == PWEST)
+			if (map->tiles[y][x] == PNORTH || map->tiles[y][x] == PEAST
+					|| map->tiles[y][x] == PSOUTH || map->tiles[y][x] == PWEST)
 			{
 				if (map->px != -1)
 					return (false);
@@ -81,7 +81,7 @@ void	set_map_tiles(t_map *map)
 		j = 0;
 		while (map->str_map[i][j])
 		{
-			map->map[y][j] = get_tile(map->str_map[i][j]);
+			map->tiles[y][j] = get_tile(map->str_map[i][j]);
 			j++;
 		}
 		y++;

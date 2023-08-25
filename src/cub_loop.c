@@ -37,9 +37,9 @@
 // 		x = 0;
 // 		while (x < cub->map.width)
 // 		{
-// 			if (cub->map.map[y][x] == WALL)
+// 			if (cub->map.tiles[y][x] == WALL)
 // 				draw_tile(x, y, tile_scale, cub->img, 0x777777FF);
-// 			if (cub->map.map[y][x] == FLOOR)
+// 			if (cub->map.tiles[y][x] == FLOOR)
 // 				draw_tile(x, y, tile_scale, cub->img, 0x444444FF);
 // 			x++;
 // 		}
@@ -61,7 +61,7 @@ bool	cub_update_image_scale(t_cubed *cub)
 	return (false);
 }
 
-void	cub_frame(void *param)
+void	cub_tick(void *param)
 {
 	t_cubed	*cub;
 
@@ -69,14 +69,12 @@ void	cub_frame(void *param)
 	if (cub_update_image_scale(cub))
 		return ;
 	cub_controls(cub);
-	ft_bzero(cub->img->pixels, (cub->img->width * cub->img->height) * 4);
-	draw_floor_and_ceiling(cub);
-	raycast(cub);
+	render_frame(cub);
 }
 
 bool	cub_loop(t_cubed *cub)
 {
-	if (!mlx_loop_hook(cub->mlx, cub_frame, (void *)cub))
+	if (!mlx_loop_hook(cub->mlx, cub_tick, (void *)cub))
 		return (error_exit("Mlx Loop hook failed\n", cub), false);
 	mlx_cursor_hook(cub->mlx, update_mouse, (void *)cub);
 	mlx_loop(cub->mlx);

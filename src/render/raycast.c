@@ -4,27 +4,27 @@
 
 /* determine the distance to the first x and first y side
    */
-void	init_step_and_side_dist(t_raycast *r, t_cubed *cub)
+void	init_step_and_side_dist(t_raycast *r, t_vec pos, t_vec raydir)
 {
-	if (r->raydirx < 0)
+	if (raydir.x < 0)
 	{
 		r->stepx = -1;
-		r->sidedistx = (cub->player.pos.x - r->mapx) * r->deltadistx;
+		r->sidedistx = (pos.x - r->mapx) * r->deltadistx;
 	}
 	else
 	{
 		r->stepx = 1;
-		r->sidedistx = (r->mapx + 1.0 - cub->player.pos.x) * r->deltadistx;
+		r->sidedistx = (r->mapx + 1.0 - pos.x) * r->deltadistx;
 	}
-	if (r->raydiry < 0)
+	if (raydir.y < 0)
 	{
 		r->stepy = -1;
-		r->sidedisty = (cub->player.pos.y - r->mapy) * r->deltadisty;
+		r->sidedisty = (pos.y - r->mapy) * r->deltadisty;
 	}
 	else
 	{
 		r->stepy = 1;
-		r->sidedisty = (r->mapy + 1.0 - cub->player.pos.y) * r->deltadisty;
+		r->sidedisty = (r->mapy + 1.0 - pos.y) * r->deltadisty;
 	}
 }
 
@@ -45,29 +45,26 @@ void	init_step_and_side_dist(t_raycast *r, t_cubed *cub)
 	If you divide 1 by the x or y component of a
 	vector you get the relative size of each component on its own.
 */
-void	init_ray(uint32_t x, t_raycast *r, t_cubed *cub)
+void	init_ray(t_raycast *r, t_vec pos, t_vec raydir)
 {
-	r->mapx = (int)cub->player.pos.x;
-	r->mapy = (int)cub->player.pos.y;
-	r->camx = cub->fov * ((float)x / cub->img->width) - (cub->fov / 2);
-	r->raydirx = cub->player.dir.x + (cub->player.c_plane.x) * r->camx;
-	r->raydiry = cub->player.dir.y + (cub->player.c_plane.y) * r->camx;
-	if (r->raydirx == 0)
+	r->mapx = (int)pos.x;
+	r->mapy = (int)pos.y;
+	if (raydir.x == 0)
 		r->deltadistx = 1e30;
 	else
-		r->deltadistx = fabs(1 / r->raydirx);
-	if (r->raydiry == 0)
+		r->deltadistx = fabs(1 / raydir.x);
+	if (raydir.y == 0)
 		r->deltadisty = 1e30;
 	else
-		r->deltadisty = fabs(1 / r->raydiry);
-	init_step_and_side_dist(r, cub);
+		r->deltadisty = fabs(1 / raydir.y);
+	init_step_and_side_dist(r, pos, raydir);
 	r->hit = 0;
 }
 
 /* DDA loop
    here the actual steps are taken to see when a wall is hit.
 */
-void	ray_loop(t_raycast *r, t_cubed *cub)
+void	ray_loop(t_raycast *r, t_map map)
 {
 	while (r->hit == 0)
 	{
@@ -83,20 +80,12 @@ void	ray_loop(t_raycast *r, t_cubed *cub)
 			r->mapy += r->stepy;
 			r->side = 1;
 		}
-		if (r->mapx < cub->map.width
-			&& r->mapy < cub->map.height
+		if (r->mapx < map.width
+			&& r->mapy < map.height
 			&& r->mapx >= 0 && r->mapy >= 0
-			&& cub->map.map[r->mapy][r->mapx] > FLOOR)
+			&& map.tiles[r->mapy][r->mapx] > FLOOR)
 			r->hit = 1;
 	}
-}
-
-void	set_distance(t_raycast *r)
-{
-	if (r->side == 0)
-		r->perpwalldist = (r->sidedistx - r->deltadistx);
-	else
-		r->perpwalldist = (r->sidedisty - r->deltadisty);
 }
 
 /*
@@ -127,28 +116,21 @@ void	set_distance(t_raycast *r)
 	deltadistx with every jump in their direction,
 	and r.mapx and r.mapy get incremented with stepx and r.stepy respectively.
 */
-void	raycast(t_cubed *cub)
+t_raycast_info	raycast(t_vec pos, t_vec dir, t_map map)
 {
-	uint32_t	x;
-	t_raycast	r;
+	t_raycast		r;
+	t_raycast_info	inf;
 
-	x = 0;
-	ft_bzero(cub->minimap->pixels,
-		sizeof(uint32_t) * cub->minimap->width * cub->minimap->height);
-	ft_bzero(cub->minimap_view->pixels,
-		sizeof(uint32_t) * cub->minimap->width * cub->minimap->height);
-	mlx_put_pixel(cub->minimap_view,
-		(int)(cub->player.pos.x * cub->mini_ratio),
-		(int)(cub->player.pos.y * cub->mini_ratio), 0xFFFFFFFF);
-	while (x < cub->img->width)
-	{
-		init_ray(x, &r, cub);
-		ray_loop(&r, cub);
-		set_distance(&r);
-		draw_wall_segment(x, r, cub,
-			get_texture(&r, &cub->map.elements.texture));
-		draw_minimap(r, cub);
-		x++;
-	}
-	draw_minimap_player(cub);
+	init_ray(&r, pos, dir);
+	ray_loop(&r, map);
+	set_distance(&r);
+	set_hit_position(&r, pos, dir);
+	r.raydirx = dir.x;
+	r.raydiry = dir.y;
+	inf.dir = dir;
+	inf.start = pos;
+	inf.perpwalldist = r.perpwalldist;
+	inf.hit_pos = r.hit_pos;
+	inf.side = r.side;
+	return (inf);
 }

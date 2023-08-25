@@ -1,14 +1,14 @@
 #include <cub3d.h>
 #include <math.h>
 
-float	get_wall_x(t_cubed *cub, t_raycast r)
+float	get_wall_x(t_cubed *cub, t_raycast_info r)
 {
 	float	wall_x;
 
 	if (r.side == 0)
-		wall_x = cub->player.pos.y + r.perpwalldist * r.raydiry;
+		wall_x = cub->player.pos.y + r.perpwalldist * r.dir.y;
 	else
-		wall_x = cub->player.pos.x + r.perpwalldist * r.raydirx;
+		wall_x = cub->player.pos.x + r.perpwalldist * r.dir.x;
 	wall_x -= floor(wall_x);
 	return (wall_x);
 }
@@ -18,7 +18,7 @@ int	get_texture_y(int picture_height, int lineheight, int counter)
 	return (picture_height * ((float)counter / (float)lineheight));
 }
 
-int	get_alpha(t_raycast *r, t_cubed *cub)
+int	get_alpha(t_raycast_info *r, t_cubed *cub)
 {
 	float	color_falloff;
 
@@ -47,29 +47,28 @@ u_int32_t	get_color(mlx_texture_t *tex, int x, int y, int alpha)
 // function to draw a line of the wall.
 // lh = lineHeight. dstart = drawstart. dend = drawend.
 // c = counter.
-void	draw_wall_segment(uint32_t x, t_raycast r,
+void	draw_wall_segment(uint32_t x, t_raycast_info r,
 	t_cubed *cub, mlx_texture_t *text)
 {
-	int	lh;
-	int	dstart;
-	int	dend;
-	int	c;
-	int	y;
+	t_draw_segment	d;
+	int				c;
+	int				y;
 
 	c = 0;
-	lh = (cub->img->width / r.perpwalldist) / cub->fov;
-	dstart = (-lh / 2) + ((cub->img->height) / 2 + (int)cub->player.head_pitch);
-	dend = (lh / 2) + ((cub->img->height) / 2) + (int)cub->player.head_pitch;
-	r.wallx = get_wall_x(cub, r);
-	r.texx = (double)(text->width * r.wallx);
-	y = dstart;
-	while (y < dend && y < (int)cub->img->height)
+	d.lh = (cub->img->width / r.perpwalldist) / cub->fov;
+	d.start = (-d.lh / 2) + ((cub->img->height)
+			/ 2 + (int)cub->player.head_pitch);
+	d.end = (d.lh / 2) + ((cub->img->height) / 2) + (int)cub->player.head_pitch;
+	d.wallx = get_wall_x(cub, r);
+	d.texx = (double)(text->width * d.wallx);
+	y = d.start;
+	while (y < d.end && y < (int)cub->img->height)
 	{
 		if (y >= 0)
 		{
-			r.texy = get_texture_y(text->height, lh, c);
+			d.texy = get_texture_y(text->height, d.lh, c);
 			mlx_put_pixel(cub->img, x, y,
-				get_color(text, r.texx, r.texy, get_alpha(&r, cub)));
+				get_color(text, d.texx, d.texy, get_alpha(&r, cub)));
 		}
 		c++;
 		y++;

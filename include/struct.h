@@ -55,7 +55,7 @@ typedef struct s_vect
 typedef struct s_map
 {
 	char		**str_map;
-	t_tile		**map;
+	t_tile		**tiles;
 	int			px;
 	int			py;
 	int			height;
@@ -64,9 +64,27 @@ typedef struct s_map
 
 }	t_map;
 
+typedef struct s_draw_segment
+{
+	double	wallx;
+	int		texx;
+	int		texy;
+	int		lh;
+	int		start;
+	int		end;
+}	t_draw_segment;
+
+typedef struct s_raycast_info
+{
+	t_vec	dir;
+	t_vec	start;
+	t_vec	hit_pos;
+	int		side;
+	float	perpwalldist;
+}	t_raycast_info;
+
 typedef struct s_raycast
 {
-	double	camx;
 	double	raydirx;
 	double	raydiry;
 	int		mapx;
@@ -76,14 +94,11 @@ typedef struct s_raycast
 	float	deltadistx;
 	float	deltadisty;
 	float	perpwalldist;
-	double	wallx;
-	t_vec	hit_pos;
-	int		texx;
-	int		texy;
 	int		stepx;
 	int		stepy;
 	int		hit;
 	int		side;
+	t_vec	hit_pos;
 }	t_raycast;
 
 typedef struct s_player

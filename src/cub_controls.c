@@ -6,10 +6,13 @@ void	update_mouse(double xpos, double ypos, void *param)
 
 	cub = (t_cubed *)param;
 	cub->player.dir = vec_rotate(cub->player.dir,
-			(cub->mlx->delta_time * (xpos - cub->prev_mousex) * cub->player.turn_speed) / 8);
+			(cub->mlx->delta_time * (xpos - cub->prev_mousex)
+				* cub->player.turn_speed) / 8);
 	cub->player.c_plane = vec_rotate(cub->player.c_plane,
-			(cub->mlx->delta_time * (xpos - cub->prev_mousex) * cub->player.turn_speed) / 8);
-	cub->player.head_pitch -= cub->mlx->delta_time * (ypos - cub->prev_mousey) * 150;
+			(cub->mlx->delta_time * (xpos - cub->prev_mousex)
+				* cub->player.turn_speed) / 8);
+	cub->player.head_pitch -= cub->mlx->delta_time
+		* (ypos - cub->prev_mousey) * 150;
 	if (cub->player.head_pitch > (int)(cub->img->height / 2))
 		cub->player.head_pitch = (int)(cub->img->height / 2);
 	else if (cub->player.head_pitch < -(int)(cub->img->height / 2))
@@ -48,12 +51,12 @@ void	cub_movement_check(t_cubed *cub)
 	t_vec	move_vec;
 
 	move_vec = get_move_vec(cub);
-	if (cub->map.map[(int)(cub->player.pos.y)]
+	if (cub->map.tiles[(int)(cub->player.pos.y)]
 		[(int)(cub->player.pos.x + (move_vec.x * 3.0))] == 1)
 	{
 		cub->player.pos.x += move_vec.x;
 	}
-	if (cub->map.map[(int)(cub->player.pos.y + (move_vec.y * 3.0))]
+	if (cub->map.tiles[(int)(cub->player.pos.y + (move_vec.y * 3.0))]
 		[(int)(cub->player.pos.x)] == 1)
 		cub->player.pos.y += move_vec.y;
 }

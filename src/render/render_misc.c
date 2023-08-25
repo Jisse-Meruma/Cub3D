@@ -22,15 +22,15 @@ void	draw_floor_and_ceiling(t_cubed *cub)
 	}
 }
 
-mlx_texture_t	*get_texture(t_raycast *r, t_texture *textures)
+mlx_texture_t	*get_texture(t_raycast_info *r, t_texture *textures)
 {
-	if (r->side == 1 && r->raydiry > 0)
+	if (r->side == 1 && r->dir.y > 0)
 		return (textures->north_wall);
-	if (r->side == 0 && r->raydirx > 0)
+	if (r->side == 0 && r->dir.x > 0)
 		return (textures->west_wall);
-	if (r->side == 1 && r->raydiry < 0)
+	if (r->side == 1 && r->dir.y < 0)
 		return (textures->south_wall);
-	if (r->side == 0 && r->raydirx < 0)
+	if (r->side == 0 && r->dir.x < 0)
 		return (textures->east_wall);
 	return (NULL);
 }

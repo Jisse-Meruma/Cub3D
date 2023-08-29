@@ -2,34 +2,26 @@
 
 static void	add_right_vec(t_vec *move_vec, t_cubed *cub)
 {
-	move_vec->x += vec_rotate(cub->player.dir, 90).x
-		* cub->mlx->delta_time * cub->player.move_speed;
-	move_vec->y += vec_rotate(cub->player.dir, 90).y
-		* cub->mlx->delta_time * cub->player.move_speed;
+	move_vec->x += vec_rotate(cub->player.dir, 90).x;
+	move_vec->y += vec_rotate(cub->player.dir, 90).y;
 }
 
 static void	add_left_vec(t_vec *move_vec, t_cubed *cub)
 {
-	move_vec->x -= vec_rotate(cub->player.dir, 90).x
-		* cub->mlx->delta_time * cub->player.move_speed;
-	move_vec->y -= vec_rotate(cub->player.dir, 90).y
-		* cub->mlx->delta_time * cub->player.move_speed;
+	move_vec->x -= vec_rotate(cub->player.dir, 90).x;
+	move_vec->y -= vec_rotate(cub->player.dir, 90).y;
 }
 
 static void	add_backward_vec(t_vec *move_vec, t_cubed *cub)
 {
-	move_vec->x -= cub->player.dir.x
-		* cub->mlx->delta_time * cub->player.move_speed;
-	move_vec->y -= cub->player.dir.y
-		* cub->mlx->delta_time * cub->player.move_speed;
+	move_vec->x -= cub->player.dir.x;
+	move_vec->y -= cub->player.dir.y;
 }
 
 static void	add_forward_vec(t_vec *move_vec, t_cubed *cub)
 {
-	move_vec->x += cub->player.dir.x
-		* cub->mlx->delta_time * cub->player.move_speed;
-	move_vec->y += cub->player.dir.y
-		* cub->mlx->delta_time * cub->player.move_speed;
+	move_vec->x += cub->player.dir.x;
+	move_vec->y += cub->player.dir.y;
 }
 
 t_vec	get_move_vec(t_cubed *cub)

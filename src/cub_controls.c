@@ -1,4 +1,5 @@
 #include <cub3d.h>
+#include <math.h>
 
 void	update_mouse(double xpos, double ypos, void *param)
 {
@@ -46,18 +47,51 @@ static void	update_player_direction(t_cubed *cub)
 		cub->player.head_pitch -= cub->mlx->delta_time * 300;
 }
 
+static t_vec	normalize_vec(t_vec vec)
+{
+	float	a;
+	float	b;
+	float	c;
+
+	a = vec.x * vec.x;
+	b = vec.y * vec.y;
+	c = sqrt(a + b);
+	vec.x = vec.x / c;
+	vec.y = vec.y / c;
+	return (vec);
+}
+
 void	cub_movement_check(t_cubed *cub)
 {
-	t_vec	move_vec;
+	t_vec			move_vec;
+	t_raycast_info	r;
 
 	move_vec = get_move_vec(cub);
-	if (cub->map.tiles[(int)(cub->player.pos.y)]
-		[(int)(cub->player.pos.x + (move_vec.x * 3.0))] == 1)
+	if (move_vec.x == 0 && move_vec.y == 0)
+		return ;
+	move_vec = normalize_vec(move_vec);
+	r = raycast(cub->player.pos, move_vec, cub->map);
+	printf("pos: %f, %f\n", cub->player.pos.x, cub->player.pos.y);
+	printf("Before: %f, %f\n", move_vec.x, move_vec.y);
+	if (r.perpwalldist < cub->mlx->delta_time * cub->player.move_speed)
 	{
-		cub->player.pos.x += move_vec.x;
+		move_vec.x = move_vec.x * r.perpwalldist;
+		move_vec.y = move_vec.y * r.perpwalldist;
 	}
-	if (cub->map.tiles[(int)(cub->player.pos.y + (move_vec.y * 3.0))]
-		[(int)(cub->player.pos.x)] == 1)
+	else if (r.perpwalldist > cub->mlx->delta_time * cub->player.move_speed)
+	{
+		move_vec.x = move_vec.x * cub->mlx->delta_time * cub->player.move_speed;
+		move_vec.y = move_vec.y * cub->mlx->delta_time * cub->player.move_speed;
+	}
+	printf("move_vec: %f, %f\n", move_vec.x, move_vec.y);
+	printf("perpwalldist: %f, move speed: %f\n", r.perpwalldist, cub->mlx->delta_time * cub->player.move_speed);
+	if (fabsf(move_vec.x) < 0.2)
+		move_vec.x = 0;
+	if (fabsf(move_vec.y) < 0.2)
+		move_vec.y = 0;
+	if (cub->map.tiles[(int)cub->player.pos.y][(int)(cub->player.pos.x + move_vec.x)] != WALL)
+		cub->player.pos.x += move_vec.x;
+	if (cub->map.tiles[(int)(cub->player.pos.y + move_vec.y)][(int)cub->player.pos.x] != WALL)
 		cub->player.pos.y += move_vec.y;
 }
 

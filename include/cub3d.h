@@ -7,7 +7,7 @@
 # include <fcntl.h>
 # include <stdio.h>
 
-# define WINDOW_WIDTH 900
+# define WINDOW_WIDTH 2000
 # define WINDOW_HEIGHT 900
 
 // Parser functions
@@ -49,7 +49,6 @@ void			cub_controls(t_cubed *cub);
 
 // Cub3d functions
 t_vec			vec_rotate(t_vec vec, float angle);
-
 
 // Cub3d cleanup
 bool			cub_end(t_cubed *cub);

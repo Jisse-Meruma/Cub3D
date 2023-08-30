@@ -1,4 +1,3 @@
-
 #ifndef STRUCT_H
 # define STRUCT_H
 
@@ -126,6 +125,7 @@ typedef struct s_cubed
 	float		render_distance;
 	double		prev_mousey;
 	double		prev_mousex;
+	int			mouse_controls;
 }	t_cubed;
 
 typedef bool	(*t_func) (t_elements *, char *);

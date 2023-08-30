@@ -57,6 +57,7 @@ bool			cub_end(t_cubed *cub);
 t_vec			get_move_vec(t_cubed *cub);
 void			hitbox_check(t_cubed *cub, t_vec pos, t_vec move_vec);
 void			update_mouse(double xdelta, double ydelta, void *param);
+void			toggle_hook(mlx_key_data_t keydata, void *param);
 
 // Render
 void			draw_wall_segment(uint32_t x, t_raycast_info r,
@@ -71,9 +72,14 @@ void			set_distance(t_raycast *r);
 void			set_hit_position(t_raycast *r, t_vec pos, t_vec raydir);
 
 // Minimap
+bool			minimap_init(t_cubed *cub);
 void			draw_line(mlx_image_t *img,
 					t_vec p1, t_vec p2, unsigned int color);
 void			draw_minimap(t_raycast_info r, t_cubed *cub);
 void			draw_minimap_player(t_cubed *cub);
+
+// Utils
+
+t_vec			normalize_vec(t_vec vec);
 
 #endif

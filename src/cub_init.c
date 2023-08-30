@@ -38,59 +38,8 @@ void	player_init(t_cubed *cub)
 	cub->player.head_pitch = 0;
 }
 
-void	draw_minimap_background(t_cubed *cub)
+static bool	image_init(t_cubed *cub)
 {
-	uint32_t	y;
-	uint32_t	x;
-
-	y = 0;
-	while (y < cub->minimap_background->height)
-	{
-		x = 0;
-		while (x < cub->minimap_background->width)
-		{
-			mlx_put_pixel(cub->minimap_background, x, y, 0x555555DD);
-			x++;
-		}
-		y++;
-	}
-}
-
-bool	minimap_init(t_cubed *cub)
-{
-	int	mini_scale;
-
-	if (WINDOW_WIDTH > WINDOW_HEIGHT)
-		mini_scale = WINDOW_WIDTH / 4;
-	else
-		mini_scale = WINDOW_HEIGHT / 4;
-	cub->minimap = mlx_new_image(cub->mlx, mini_scale, mini_scale);
-	cub->minimap_view = mlx_new_image(cub->mlx, mini_scale, mini_scale);
-	cub->minimap_explored = mlx_new_image(cub->mlx, mini_scale, mini_scale);
-	cub->minimap_background = mlx_new_image(cub->mlx, mini_scale, mini_scale);
-	if (!cub->minimap_background || !cub->minimap
-		|| !cub->minimap_view || !cub->minimap_explored)
-	{
-		mlx_delete_image(cub->mlx, cub->minimap);
-		mlx_delete_image(cub->mlx, cub->minimap_view);
-		mlx_delete_image(cub->mlx, cub->minimap_explored);
-		mlx_delete_image(cub->mlx, cub->minimap_background);
-		return (error_exit("allocating minimap images\n", cub), false);
-	}
-	draw_minimap_background(cub);
-	if (cub->map.width > cub->map.height)
-		cub->mini_ratio = (float)cub->minimap->width / (float)cub->map.width;
-	else
-		cub->mini_ratio = (float)cub->minimap->height / (float)cub->map.height;
-	return (true);
-}
-
-bool	cub_init(t_cubed *cub)
-{
-	player_init(cub);
-	cub->mlx = mlx_init(WINDOW_WIDTH, WINDOW_HEIGHT, "Cub3d", 1);
-	if (cub->mlx == NULL)
-		return (error_exit("Mlx init\n", cub), false);
 	cub->img = mlx_new_image(cub->mlx, WINDOW_WIDTH, WINDOW_HEIGHT);
 	if (!cub->img)
 		return (error_exit("Img init\n", cub), false);
@@ -106,6 +55,17 @@ bool	cub_init(t_cubed *cub)
 	cub->minimap_view->instances[0].z = 4;
 	cub->minimap_background->instances[0].z = 1;
 	cub->minimap_explored->instances[0].z = 2;
+	return (true);
+}
+
+bool	cub_init(t_cubed *cub)
+{
+	player_init(cub);
+	cub->mlx = mlx_init(WINDOW_WIDTH, WINDOW_HEIGHT, "Cub3d", 1);
+	if (cub->mlx == NULL)
+		return (error_exit("Mlx init\n", cub), false);
+	if (!image_init(cub))
+		return (error_exit("Image to window\n", cub), false);
 	cub->fov = 3.0;
 	cub->render_distance = 10;
 	cub->map.tiles[cub->map.py][cub->map.px] = FLOOR;

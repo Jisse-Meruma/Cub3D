@@ -25,12 +25,13 @@ SRC 	:=	main.c \
 			parser/setup_map.c \
 			parser/setup_map_utils.c \
 			cub_init.c \
+			cub_utils.c \
 			cub_loop.c \
-			vec_rotate.c \
-			cub_end.c \
 			cub_controls.c \
+			cub_end.c \
 			get_move_vec.c \
 			hitbox_check.c \
+			minimap_init.c \
 			render/minimap.c \
 			render/raycast.c \
 			render/raycast_utils.c \

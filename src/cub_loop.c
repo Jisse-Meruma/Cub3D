@@ -77,6 +77,7 @@ bool	cub_loop(t_cubed *cub)
 	if (!mlx_loop_hook(cub->mlx, cub_tick, (void *)cub))
 		return (error_exit("Mlx Loop hook failed\n", cub), false);
 	mlx_cursor_hook(cub->mlx, update_mouse, (void *)cub);
+	mlx_key_hook(cub->mlx, toggle_hook, (void *)cub);
 	mlx_loop(cub->mlx);
 	return (true);
 }

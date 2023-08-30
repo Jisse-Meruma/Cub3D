@@ -6,12 +6,14 @@ void	update_mouse(double xpos, double ypos, void *param)
 	t_cubed	*cub;
 
 	cub = (t_cubed *)param;
+	if (cub->mouse_controls == 0)
+		return ;
 	cub->player.dir = vec_rotate(cub->player.dir,
 			(cub->mlx->delta_time * (xpos - cub->prev_mousex)
-				* cub->player.turn_speed) / 8);
+				* (cub->player.turn_speed / 12)));
 	cub->player.c_plane = vec_rotate(cub->player.c_plane,
 			(cub->mlx->delta_time * (xpos - cub->prev_mousex)
-				* cub->player.turn_speed) / 8);
+				* (cub->player.turn_speed / 12)));
 	cub->player.head_pitch -= cub->mlx->delta_time
 		* (ypos - cub->prev_mousey) * 150;
 	if (cub->player.head_pitch > (int)(cub->img->height / 2))
@@ -47,18 +49,19 @@ static void	update_player_direction(t_cubed *cub)
 		cub->player.head_pitch -= cub->mlx->delta_time * 300;
 }
 
-static t_vec	normalize_vec(t_vec vec)
+void	toggle_hook(mlx_key_data_t keydata, void *param)
 {
-	float	a;
-	float	b;
-	float	c;
+	t_cubed	*cub;
 
-	a = vec.x * vec.x;
-	b = vec.y * vec.y;
-	c = sqrt(a + b);
-	vec.x = vec.x / c;
-	vec.y = vec.y / c;
-	return (vec);
+	cub = (t_cubed *)param;
+	if (keydata.key == MLX_KEY_M && keydata.action == MLX_PRESS)
+	{
+		cub->mouse_controls = (cub->mouse_controls * -1) + 1;
+		if (cub->mouse_controls)
+			mlx_set_cursor_mode(cub->mlx, MLX_MOUSE_DISABLED);
+		else
+			mlx_set_cursor_mode(cub->mlx, MLX_MOUSE_NORMAL);
+	}
 }
 
 void	cub_movement_check(t_cubed *cub)
@@ -89,9 +92,7 @@ void	cub_movement_check(t_cubed *cub)
 void	cub_controls(t_cubed *cub)
 {
 	if (mlx_is_key_down(cub->mlx, MLX_KEY_ESCAPE))
-	{
 		mlx_close_window(cub->mlx);
-	}
 	update_player_direction(cub);
 	cub_movement_check(cub);
 	if (mlx_is_key_down(cub->mlx, MLX_KEY_EQUAL) && cub->fov < 10)

@@ -16,3 +16,17 @@ t_vec	vec_rotate(t_vec vec, float angle)
 	vec2.y = (sin(rad_angle) * vec.x) + (cos(rad_angle) * vec.y);
 	return (vec2);
 }
+
+t_vec	normalize_vec(t_vec vec)
+{
+	float	a;
+	float	b;
+	float	c;
+
+	a = vec.x * vec.x;
+	b = vec.y * vec.y;
+	c = sqrt(a + b);
+	vec.x = vec.x / c;
+	vec.y = vec.y / c;
+	return (vec);
+}

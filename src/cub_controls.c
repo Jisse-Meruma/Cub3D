@@ -64,15 +64,15 @@ static t_vec	normalize_vec(t_vec vec)
 void	cub_movement_check(t_cubed *cub)
 {
 	t_vec			move_vec;
+	t_vec			pos;
 	t_raycast_info	r;
 
 	move_vec = get_move_vec(cub);
 	if (move_vec.x == 0 && move_vec.y == 0)
 		return ;
 	move_vec = normalize_vec(move_vec);
-	r = raycast(cub->player.pos, move_vec, cub->map);
-	printf("pos: %f, %f\n", cub->player.pos.x, cub->player.pos.y);
-	printf("Before: %f, %f\n", move_vec.x, move_vec.y);
+	pos = cub->player.pos;
+	r = raycast(pos, move_vec, cub->map);
 	if (r.perpwalldist < cub->mlx->delta_time * cub->player.move_speed)
 	{
 		move_vec.x = move_vec.x * r.perpwalldist;
@@ -83,16 +83,7 @@ void	cub_movement_check(t_cubed *cub)
 		move_vec.x = move_vec.x * cub->mlx->delta_time * cub->player.move_speed;
 		move_vec.y = move_vec.y * cub->mlx->delta_time * cub->player.move_speed;
 	}
-	printf("move_vec: %f, %f\n", move_vec.x, move_vec.y);
-	printf("perpwalldist: %f, move speed: %f\n", r.perpwalldist, cub->mlx->delta_time * cub->player.move_speed);
-	if (fabsf(move_vec.x) < 0.2)
-		move_vec.x = 0;
-	if (fabsf(move_vec.y) < 0.2)
-		move_vec.y = 0;
-	if (cub->map.tiles[(int)cub->player.pos.y][(int)(cub->player.pos.x + move_vec.x)] != WALL)
-		cub->player.pos.x += move_vec.x;
-	if (cub->map.tiles[(int)(cub->player.pos.y + move_vec.y)][(int)cub->player.pos.x] != WALL)
-		cub->player.pos.y += move_vec.y;
+	hitbox_check(cub, pos, move_vec);
 }
 
 void	cub_controls(t_cubed *cub)

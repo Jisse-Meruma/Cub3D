@@ -80,10 +80,11 @@ void	ray_loop(t_raycast *r, t_map map)
 			r->mapy += r->stepy;
 			r->side = 1;
 		}
-		if (r->mapx < map.width
-			&& r->mapy < map.height
-			&& r->mapx >= 0 && r->mapy >= 0
-			&& map.tiles[r->mapy][r->mapx] > FLOOR)
+		if (r->mapx >= map.width
+			|| r->mapy >= map.height
+			|| r->mapx < 0 || r->mapy < 0)
+			return ;
+		if (map.tiles[r->mapy][r->mapx] > FLOOR)
 			r->hit = 1;
 	}
 }

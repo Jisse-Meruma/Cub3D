@@ -7,7 +7,7 @@
 # include <fcntl.h>
 # include <stdio.h>
 
-# define WINDOW_WIDTH 2000
+# define WINDOW_WIDTH 1800
 # define WINDOW_HEIGHT 900
 
 // Parser functions
@@ -55,6 +55,7 @@ bool			cub_end(t_cubed *cub);
 
 // Movement
 t_vec			get_move_vec(t_cubed *cub);
+void			hitbox_check(t_cubed *cub, t_vec pos, t_vec move_vec);
 void			update_mouse(double xdelta, double ydelta, void *param);
 
 // Render

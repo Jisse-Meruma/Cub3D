@@ -30,6 +30,7 @@ SRC 	:=	main.c \
 			cub_end.c \
 			cub_controls.c \
 			get_move_vec.c \
+			hitbox_check.c \
 			render/minimap.c \
 			render/raycast.c \
 			render/raycast_utils.c \

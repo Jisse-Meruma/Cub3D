@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        ::::::::            */
+/*   cub_init.c                                         :+:    :+:            */
+/*                                                     +:+                    */
+/*   By: dritsema <dritsema@student.codam.nl>         +#+                     */
+/*                                                   +#+                      */
+/*   Created: 2023/08/31 12:22:28 by dritsema      #+#    #+#                 */
+/*   Updated: 2023/08/31 14:01:13 by dritsema      ########   odam.nl         */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include <cub3d.h>
 #include <stdbool.h>
 #include <stdint.h>
@@ -42,7 +54,7 @@ static bool	image_init(t_cubed *cub)
 {
 	cub->img = mlx_new_image(cub->mlx, WINDOW_WIDTH, WINDOW_HEIGHT);
 	if (!cub->img)
-		return (error_exit("Img init\n", cub), false);
+		return (false);
 	if (!minimap_init(cub))
 		return (false);
 	if (mlx_image_to_window(cub->mlx, cub->img, 0, 0) == -1
@@ -50,7 +62,7 @@ static bool	image_init(t_cubed *cub)
 		|| mlx_image_to_window(cub->mlx, cub->minimap_view, 0, 0) == -1
 		|| mlx_image_to_window(cub->mlx, cub->minimap_explored, 0, 0) == -1
 		|| mlx_image_to_window(cub->mlx, cub->minimap_background, 0, 0) == -1)
-		return (error_exit("Image to window\n", cub), false);
+		return (false);
 	cub->minimap->instances[0].z = 3;
 	cub->minimap_view->instances[0].z = 4;
 	cub->minimap_background->instances[0].z = 1;
@@ -63,9 +75,9 @@ bool	cub_init(t_cubed *cub)
 	player_init(cub);
 	cub->mlx = mlx_init(WINDOW_WIDTH, WINDOW_HEIGHT, "Cub3d", 1);
 	if (cub->mlx == NULL)
-		return (error_exit("Mlx init\n", cub), false);
+		return (error_exit("Mlx initilization failed\n", cub), false);
 	if (!image_init(cub))
-		return (error_exit("Image to window\n", cub), false);
+		return (error_exit("Image initilization failed\n", cub), false);
 	cub->fov = 3.0;
 	cub->render_distance = 10;
 	cub->map.tiles[cub->map.py][cub->map.px] = FLOOR;

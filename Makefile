@@ -44,10 +44,6 @@ SRC		:=	$(addprefix $(SRC_DIR)/,$(SRC))
 
 UNAME_S := $(shell uname -s)
 
-## BON_SRC :=
-
-## BON_OBJ :=  $(BON_SRC:_bonus.c=_bonus.o)
-
 ## Regular Colors ##############################################
 Color_Off	=	"\033[0m"			# Text Reset
 Black		=	"\033[0;30m"		# Black

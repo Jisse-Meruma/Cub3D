@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        ::::::::            */
+/*   minimap_init.c                                     :+:    :+:            */
+/*                                                     +:+                    */
+/*   By: dritsema <dritsema@student.codam.nl>         +#+                     */
+/*                                                   +#+                      */
+/*   Created: 2023/08/31 12:22:03 by dritsema      #+#    #+#                 */
+/*   Updated: 2023/08/31 13:52:51 by dritsema      ########   odam.nl         */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include <cub3d.h>
 
 void	draw_minimap_background(t_cubed *cub)
@@ -31,13 +43,7 @@ static bool	minimap_images_init(t_cubed *cub)
 	cub->minimap_background = mlx_new_image(cub->mlx, x_size, y_size);
 	if (!cub->minimap_background || !cub->minimap
 		|| !cub->minimap_view || !cub->minimap_explored)
-	{
-		mlx_delete_image(cub->mlx, cub->minimap);
-		mlx_delete_image(cub->mlx, cub->minimap_view);
-		mlx_delete_image(cub->mlx, cub->minimap_explored);
-		mlx_delete_image(cub->mlx, cub->minimap_background);
 		return (false);
-	}
 	return (true);
 }
 
@@ -54,7 +60,7 @@ bool	minimap_init(t_cubed *cub)
 	else
 		cub->mini_ratio = (float)mini_scale / (float)cub->map.height;
 	if (!minimap_images_init(cub))
-		return (error_exit("allocating minimap images\n", cub), false);
+		return (false);
 	draw_minimap_background(cub);
 	return (true);
 }

@@ -1,51 +1,19 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        ::::::::            */
+/*   cub_loop.c                                         :+:    :+:            */
+/*                                                     +:+                    */
+/*   By: dritsema <dritsema@student.codam.nl>         +#+                     */
+/*                                                   +#+                      */
+/*   Created: 2023/08/31 12:22:18 by dritsema      #+#    #+#                 */
+/*   Updated: 2023/08/31 12:22:24 by dritsema      ########   odam.nl         */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "MLX42.h"
 #include "struct.h"
 #include <cub3d.h>
 #include <stdint.h>
-
-// void	draw_tile(int x, int y, unsigned int tile_scale, mlx_image_t *img,
-// unsigned int color)
-// {
-// 	unsigned int	dx;
-// 	unsigned int	dy;
-//
-// 	dy = 0;
-// 	while (dy < tile_scale)
-// 	{
-// 		dx = 0;
-// 		while (dx < tile_scale)
-// 		{
-// 			if (dx < img->width && dy < img->height)
-// 				mlx_put_pixel(img, dx + (x * tile_scale),
-//					dy + (y * tile_scale), color);
-// 			dx++;
-// 		}
-// 		dy++;
-// 	}
-// }
-
-// void	draw_map(t_cubed *cub)
-// {
-// 	int	y;
-// 	int	x;
-// 	int	tile_scale;
-//
-// 	tile_scale = 10;
-// 	y = 0;
-// 	while (y < cub->map.height)
-// 	{
-// 		x = 0;
-// 		while (x < cub->map.width)
-// 		{
-// 			if (cub->map.tiles[y][x] == WALL)
-// 				draw_tile(x, y, tile_scale, cub->img, 0x777777FF);
-// 			if (cub->map.tiles[y][x] == FLOOR)
-// 				draw_tile(x, y, tile_scale, cub->img, 0x444444FF);
-// 			x++;
-// 		}
-// 		y++;
-// 	}
-// }
 
 bool	cub_update_image_scale(t_cubed *cub)
 {
